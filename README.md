@@ -22,6 +22,13 @@ In the HTML content itself you can denote an element as being available for tran
 
     <span lang="en">Translate me</span>
 
+Or any element with some content such as:
+
+    <select name="testSelect">
+        <option lang="en" value="1">An option phrase to translate</option>
+        <option lang="en" value="2">Another phrase to translate</option>
+    </select>
+
 # Dynamic content
 
 If you load content dynamically the plugin will need to know when the content has been loaded in order to work correctly. After loading any content always call the plugin's .run() method which will automatically scan the content and translate into the current language.
@@ -42,6 +49,7 @@ Language packs are defined in JS files and are added to the plugin like so:
         'Property Search':'ค้นหา',
         'Location':'สถานที่ตั้ง',
         'Budget':'งบประมาณ',
+        'An option phrase to translate':'งบประมาณงบประมาณสถานที่ตั้ง',
     }
 
 That example just defined a language pack to translate from the default page language English into Thai (th). Each property inside the object has a key that is the English phrase, then the value is the Thai equivalent.
