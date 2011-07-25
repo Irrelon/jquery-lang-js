@@ -69,4 +69,4 @@ It's that simple!
 
 This plugin and all code contained is Copyright 2011 Irrelon Software Limited. You are granted a license to use this code / software as you wish, free of charge and free of restrictions.
 
-If you like this project, please consider Flattr-ing this! http://flattr.com/thing/352558/jQuery-Multi-Language-Site-Plugin
+If you like this project, please consider Flattr-ing it! http://flattr.com/thing/352558/jQuery-Multi-Language-Site-Plugin
