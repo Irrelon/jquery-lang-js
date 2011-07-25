@@ -1,5 +1,5 @@
 # Instantly Switch Content Languages
-## Change language without reloading the page or doing a request to the server. See the example!!
+### Change language without reloading the page or doing a request to the server. See the example!!
 
 This jQuery plugin allows you to create multiple language versions of your content by supplying phrase translations from a default language such as English to other languages.
 
