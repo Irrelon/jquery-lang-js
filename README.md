@@ -32,3 +32,9 @@ To switch languages simply call the .change() method, passing the two-letter lan
     <a href="#lang-en" onclick="window.lang.change('en');">Switch to English</a> | <a href="#lang-en" onclick="window.lang.change('th');">Switch to Thai</a>
 
 The onclick event is the only part that matters, you can apply the onclick to any element you prefer.
+
+# License
+
+This plugin and all code contained is Copyright 2011 Irrelon Software Limited. You are granted a license to use this code / software as you wish, free of charge and free of restrictions.
+
+If you like this project, please consider Flattr-ing this! http://flattr.com/thing/352558/jQuery-Multi-Language-Site-Plugin
