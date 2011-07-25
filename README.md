@@ -16,6 +16,15 @@ Include the plugin script in your head tag and include any language pack you hav
     <script src="js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
     <script src="js/langpack/th.js" charset="utf-8" type="text/javascript"></script>
 
+When your page is loaded simply call the .run() method as so:
+
+    <script type="text/javascript">
+	window.lang = new jquery_lang_js();
+	$().ready(function () {
+		window.lang.run();
+	});
+    </script>
+
 # Defining which elements to translate
 
 In the HTML content itself you can denote an element as being available for translation by adding a "lang" attribute with the language of the content as such:
