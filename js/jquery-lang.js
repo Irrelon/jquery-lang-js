@@ -59,7 +59,7 @@ jquery_lang_js.prototype.loadPack = function (packPath) {
 }
 	
 jquery_lang_js.prototype.change = function (lang) {
-	console.log('Changing language to ' + lang);
+	//console.log('Changing language to ' + lang);
 	if (this.currentLang != lang) { this.update(lang); }
 	this.currentLang = lang;
 	
@@ -81,7 +81,7 @@ jquery_lang_js.prototype.change = function (lang) {
 					langElem.attr('lang', lang);
 				}
 			} else {
-				console.log('No language data for element... have you executed .run() first?');
+				//console.log('No language data for element... have you executed .run() first?');
 			}
 		}
 	} else {
