@@ -70,3 +70,5 @@ It's that simple!
 This plugin and all code contained is Copyright 2011 Irrelon Software Limited. You are granted a license to use this code / software as you wish, free of charge and free of restrictions.
 
 If you like this project, please consider Flattr-ing it! http://bit.ly/qCEbTC
+
+This project is part of the Isogenic Game Engine, an HTML5 MMO Real-time Multiplayer 2D & Isometric Canvas & DOM Game Engine for the Modern Web. www.isogenicengine.com
