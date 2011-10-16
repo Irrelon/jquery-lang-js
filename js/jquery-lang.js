@@ -47,7 +47,18 @@ jquery_lang_js.prototype.run = function () {
 		var langElem = $(elem);
 		
 		if (langElem.attr('lang') == this.defaultLang) {
-			langElem.data('deftext', langElem.html());
+			if (langElem.is("input")) {
+				// An input element
+				switch (langElem.attr('type')) {
+					case 'button':
+					case 'submit':
+						langElem.data('deftext', langElem.val());
+					break;
+				}
+			} else {
+				// Not an input element
+				langElem.data('deftext', langElem.html());
+			}
 		}
 	}
 	
@@ -72,13 +83,36 @@ jquery_lang_js.prototype.change = function (lang) {
 			var elem = langElems[elemsLength];
 			var langElem = $(elem);
 			if (langElem.data('deftext')) {
-				var currentText = langElem.html();
-				var englishText = langElem.data('deftext');
-				var newText = this.lang[lang][englishText] || currentText;
-				var newHtml = currentText.replace(englishText, newText);
-				langElem.html(newHtml);
-				if (currentText != newHtml) {
-					langElem.attr('lang', lang);
+				if (langElem.is("input")) {
+					// An input element
+					switch (langElem.attr('type')) {
+						case 'button':
+						case 'submit':
+							// A button or submit, change the value attribute
+							var currentText = langElem.val();
+							var defaultLangText = langElem.data('deftext');
+							
+							var newText = this.lang[lang][defaultLangText] || currentText;
+							var newHtml = currentText.replace(currentText, newText);
+							langElem.val(newHtml);
+							
+							if (currentText != newHtml) {
+								langElem.attr('lang', lang);
+							}
+						break;
+					}
+				} else {
+					// Not an input element
+					var currentText = langElem.html();
+					var defaultLangText = langElem.data('deftext');
+					
+					var newText = this.lang[lang][defaultLangText] || currentText;
+					var newHtml = currentText.replace(currentText, newText);
+					langElem.html(newHtml);
+					
+					if (currentText != newHtml) {
+						langElem.attr('lang', lang);
+					}
 				}
 			} else {
 				//console.log('No language data for element... have you executed .run() first?');
@@ -89,7 +123,17 @@ jquery_lang_js.prototype.change = function (lang) {
 		langElems.each(function () {
 			var langElem = $(this);
 			if (langElem.data('deftext')) {
-				langElem.html(langElem.data('deftext'));
+				if (langElem.is("input")) {
+					// An input element
+					switch (langElem.attr('type')) {
+						case 'button':
+						case 'submit':
+							langElem.val(langElem.data('deftext'));
+						break;
+					}
+				} else {
+					langElem.html(langElem.data('deftext'));
+				}
 			}
 		});
 	}
