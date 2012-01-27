@@ -38,6 +38,26 @@ Or any element with some content such as:
         <option lang="en" value="2">Another phrase to translate</option>
     </select>
 
+# Button elements
+
+The plugin will automatically translate button element text when defined like this:
+
+    <button lang="en">Some button text</button>
+
+# Placeholder text
+
+You can also translate placeholder text like this:
+
+    <input type="text" placeholder="my placeholder text" lang="en" />
+
+When you change languages, the plugin will update the placeholder text where a translation exists.
+
+# Translating other text in JavaScript such as alert() calls
+
+If you need to know the current translation value of some text in your JavaScript code such as when calling alert() you can use the convert() method:
+
+    alert(window.lang.convert('Some text to translate'));
+
 # Dynamic content
 
 If you load content dynamically the plugin will need to know when the content has been loaded in order to work correctly. After loading any content always call the plugin's .run() method which will automatically scan the content and translate into the current language.
