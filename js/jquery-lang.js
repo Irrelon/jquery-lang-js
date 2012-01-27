@@ -54,6 +54,14 @@ jquery_lang_js.prototype.run = function () {
 					case 'submit':
 						langElem.data('deftext', langElem.val());
 					break;
+					
+					case 'text':
+						// Check for a placeholder text value
+						var plText = langElem.attr('placeholder');
+						if (plText) {
+							langElem.data('deftext', plText);
+						}
+					break;
 				}
 			} else {
 				// Not an input element
@@ -100,6 +108,20 @@ jquery_lang_js.prototype.change = function (lang) {
 								langElem.attr('lang', lang);
 							}
 						break;
+						
+						case 'text':
+							// Check for a placeholder text value
+							var currentText = langElem.attr('placeholder');
+							var defaultLangText = langElem.data('deftext');
+							
+							var newText = this.lang[lang][defaultLangText] || currentText;
+							var newHtml = currentText.replace(currentText, newText);
+							langElem.attr('placeholder', newHtml);
+							
+							if (currentText != newHtml) {
+								langElem.attr('lang', lang);
+							}
+						break;
 					}
 				} else {
 					// Not an input element
@@ -130,12 +152,33 @@ jquery_lang_js.prototype.change = function (lang) {
 						case 'submit':
 							langElem.val(langElem.data('deftext'));
 						break;
+						
+						case 'text':
+							// Check for a placeholder text value
+							langElem.attr('placeholder', langElem.data('deftext'));
+						break;
 					}
 				} else {
 					langElem.html(langElem.data('deftext'));
 				}
 			}
 		});
+	}
+}
+
+jquery_lang_js.prototype.convert = function (text, lang) {
+	if (lang) {
+		if (lang != this.defaultLang) {
+			return this.lang[lang][text];
+		} else {
+			return text;
+		}
+	} else {
+		if (this.currentLang != this.defaultLang) {
+			return this.lang[this.currentLang][text];
+		} else {
+			return text;
+		}
 	}
 }
 
