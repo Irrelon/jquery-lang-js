@@ -62,6 +62,7 @@ jquery_lang_js.prototype.lang.th = {
 	'Upload Image':'ใส่รูป',
 	'Finish':'เสร็จเรียบร้อย',
 	'Search':'ค้นหา',
+	'Search...':'ค้นหา',
 	'Property Description':'รายละเอียดของประกาศ',
 	'Synopsis':'รายละเอียดย่อในประกาศ',
 	'Full Description':'รายละเอียดเพิ่มเติมสำหรับผู้สนใจประกาศ',
