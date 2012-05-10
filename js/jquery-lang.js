@@ -71,6 +71,15 @@ jquery_lang_js.prototype.run = function () {
 	}
 	
 	this.change(this.currentLang);
+	
+	// Now that the language system is setup, check
+	// if there is a default language and switch to it
+	if (localStorage) {
+		var lsLang = localStorage.getItem('langJs_currentLang');
+		if (lsLang) {
+			this.change(lsLang);
+		}
+	}
 }
 
 jquery_lang_js.prototype.loadPack = function (packPath) {
@@ -84,61 +93,65 @@ jquery_lang_js.prototype.change = function (lang) {
 	
 	// Get the page HTML
 	var langElems = $('[lang]');
-	
+		
 	if (lang != this.defaultLang) {
-		var elemsLength = langElems.length;
-		while (elemsLength--) {
-			var elem = langElems[elemsLength];
-			var langElem = $(elem);
-			if (langElem.data('deftext')) {
-				if (langElem.is("input")) {
-					// An input element
-					switch (langElem.attr('type')) {
-						case 'button':
-						case 'submit':
-							// A button or submit, change the value attribute
-							var currentText = langElem.val();
-							var defaultLangText = langElem.data('deftext');
+		if (this.lang[lang]) {
+			var elemsLength = langElems.length;
+			while (elemsLength--) {
+				var elem = langElems[elemsLength];
+				var langElem = $(elem);
+				if (langElem.data('deftext')) {
+					if (langElem.is("input")) {
+						// An input element
+						switch (langElem.attr('type')) {
+							case 'button':
+							case 'submit':
+								// A button or submit, change the value attribute
+								var currentText = langElem.val();
+								var defaultLangText = langElem.data('deftext');
+								
+								var newText = this.lang[lang][defaultLangText] || currentText;
+								var newHtml = currentText.replace(currentText, newText);
+								langElem.val(newHtml);
+								
+								if (currentText != newHtml) {
+									langElem.attr('lang', lang);
+								}
+							break;
 							
-							var newText = this.lang[lang][defaultLangText] || currentText;
-							var newHtml = currentText.replace(currentText, newText);
-							langElem.val(newHtml);
-							
-							if (currentText != newHtml) {
-								langElem.attr('lang', lang);
-							}
-						break;
+							case 'text':
+								// Check for a placeholder text value
+								var currentText = langElem.attr('placeholder');
+								var defaultLangText = langElem.data('deftext');
+								
+								var newText = this.lang[lang][defaultLangText] || currentText;
+								var newHtml = currentText.replace(currentText, newText);
+								langElem.attr('placeholder', newHtml);
+								
+								if (currentText != newHtml) {
+									langElem.attr('lang', lang);
+								}
+							break;
+						}
+					} else {
+						// Not an input element
+						var currentText = langElem.html();
+						var defaultLangText = langElem.data('deftext');
 						
-						case 'text':
-							// Check for a placeholder text value
-							var currentText = langElem.attr('placeholder');
-							var defaultLangText = langElem.data('deftext');
-							
-							var newText = this.lang[lang][defaultLangText] || currentText;
-							var newHtml = currentText.replace(currentText, newText);
-							langElem.attr('placeholder', newHtml);
-							
-							if (currentText != newHtml) {
-								langElem.attr('lang', lang);
-							}
-						break;
+						var newText = this.lang[lang][defaultLangText] || currentText;
+						var newHtml = currentText.replace(currentText, newText);
+						langElem.html(newHtml);
+						
+						if (currentText != newHtml) {
+							langElem.attr('lang', lang);
+						}
 					}
 				} else {
-					// Not an input element
-					var currentText = langElem.html();
-					var defaultLangText = langElem.data('deftext');
-					
-					var newText = this.lang[lang][defaultLangText] || currentText;
-					var newHtml = currentText.replace(currentText, newText);
-					langElem.html(newHtml);
-					
-					if (currentText != newHtml) {
-						langElem.attr('lang', lang);
-					}
+					//console.log('No language data for element... have you executed .run() first?');
 				}
-			} else {
-				//console.log('No language data for element... have you executed .run() first?');
 			}
+		} else {
+			console.log('Cannot switch language, no language pack defined for "' + lang + '"');
 		}
 	} else {
 		// Restore the deftext data
@@ -183,5 +196,8 @@ jquery_lang_js.prototype.convert = function (text, lang) {
 }
 
 jquery_lang_js.prototype.update = function (lang) {
+	if (localStorage) {
+		localStorage.setItem('langJs_currentLang', lang);
+	}
 	this.emit('update', lang);
 }
