@@ -44,28 +44,31 @@ jquery_lang_js.prototype.run = function () {
 	
 	while (elemsLength--) {
 		var elem = langElems[elemsLength];
-		var langElem = $(elem);
-		
-		if (langElem.attr('lang') == this.defaultLang) {
-			if (langElem.is("input")) {
-				// An input element
-				switch (langElem.attr('type')) {
-					case 'button':
-					case 'submit':
-						langElem.data('deftext', langElem.val());
-					break;
-					
-					case 'text':
-						// Check for a placeholder text value
-						var plText = langElem.attr('placeholder');
-						if (plText) {
-							langElem.data('deftext', plText);
-						}
-					break;
+		var elemType = elem.tagName;
+		if(elemType!='HTML'){
+			var langElem = $(elem);
+			
+			if (langElem.attr('lang') == this.defaultLang) {
+				if (langElem.is("input")) {
+					// An input element
+					switch (langElem.attr('type')) {
+						case 'button':
+						case 'submit':
+							langElem.data('deftext', langElem.val());
+						break;
+						
+						case 'text':
+							// Check for a placeholder text value
+							var plText = langElem.attr('placeholder');
+							if (plText) {
+								langElem.data('deftext', plText);
+							}
+						break;
+					}
+				} else {
+					// Not an input element
+					langElem.data('deftext', langElem.html());
 				}
-			} else {
-				// Not an input element
-				langElem.data('deftext', langElem.html());
 			}
 		}
 	}
