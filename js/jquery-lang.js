@@ -35,11 +35,12 @@ var jquery_lang_js = function () {
 }
 
 jquery_lang_js.prototype.lang = {};
-jquery_lang_js.prototype.defaultLang = 'en';
-jquery_lang_js.prototype.currentLang = 'en';
+jquery_lang_js.prototype.defaultLang;
+jquery_lang_js.prototype.currentLang;
 
-jquery_lang_js.prototype.run = function () {
-	var langElems = $('[lang]');
+jquery_lang_js.prototype.run = function (defLang) {
+	this.defaultLang = defLang;
+	var langElems = $('[jql]');
 	var elemsLength = langElems.length;
 	
 	while (elemsLength--) {
@@ -47,41 +48,41 @@ jquery_lang_js.prototype.run = function () {
 		var elemType = elem.tagName;
 		if(elemType!='HTML'){
 			var langElem = $(elem);
-			
-			if (langElem.attr('lang') == this.defaultLang) {
-				if (langElem.is("input")) {
-					// An input element
-					switch (langElem.attr('type')) {
-						case 'button':
-						case 'submit':
-							langElem.data('deftext', langElem.val());
-						break;
-						
-						case 'text':
-							// Check for a placeholder text value
-							var plText = langElem.attr('placeholder');
-							if (plText) {
-								langElem.data('deftext', plText);
-							}
-						break;
-					}
-				} else {
-					// Not an input element
-					langElem.data('deftext', langElem.html());
+			if (langElem.is("input")) {
+				// An input element
+				switch (langElem.attr('type')) {
+					case 'button':
+					case 'submit':
+						langElem.data('deftext', langElem.val());
+					break;
+					case 'password':
+					case 'text':
+						// Check for a placeholder text value
+						var plText = langElem.attr('placeholder');
+						if (plText) {
+							langElem.data('deftext', plText);
+						}
+					break;
 				}
+			} else {
+				// Not an input element
+				langElem.data('deftext', langElem.html());
 			}
 		}
 	}
 	
-	this.change(this.currentLang);
-	
 	// Now that the language system is setup, check
-	// if there is a default language and switch to it
+	// if there is a current language and switch to it
 	if (localStorage) {
 		var lsLang = localStorage.getItem('langJs_currentLang');
 		if (lsLang) {
+			this.currentLang = lsLang;
 			this.change(lsLang);
+		} else {
+			this.change(this.defaultLang);
 		}
+	} else {
+		this.change(this.defaultLang);
 	}
 }
 
@@ -95,90 +96,53 @@ jquery_lang_js.prototype.change = function (lang) {
 	this.currentLang = lang;
 	
 	// Get the page HTML
-	var langElems = $('[lang]');
+	var langElems = $('[jql]');
 		
-	if (lang != this.defaultLang) {
-		if (this.lang[lang]) {
-			var elemsLength = langElems.length;
-			while (elemsLength--) {
-				var elem = langElems[elemsLength];
-				var langElem = $(elem);
-				if (langElem.data('deftext')) {
-					if (langElem.is("input")) {
-						// An input element
-						switch (langElem.attr('type')) {
-							case 'button':
-							case 'submit':
-								// A button or submit, change the value attribute
-								var currentText = langElem.val();
-								var defaultLangText = langElem.data('deftext');
-								
-								var newText = this.lang[lang][defaultLangText] || currentText;
-								var newHtml = currentText.replace(currentText, newText);
-								langElem.val(newHtml);
-								
-								if (currentText != newHtml) {
-									langElem.attr('lang', lang);
-								}
-							break;
-							
-							case 'text':
-								// Check for a placeholder text value
-								var currentText = langElem.attr('placeholder');
-								var defaultLangText = langElem.data('deftext');
-								
-								var newText = this.lang[lang][defaultLangText] || currentText;
-								var newHtml = currentText.replace(currentText, newText);
-								langElem.attr('placeholder', newHtml);
-								
-								if (currentText != newHtml) {
-									langElem.attr('lang', lang);
-								}
-							break;
-						}
-					} else {
-						// Not an input element
-						var currentText = langElem.html();
-						var defaultLangText = langElem.data('deftext');
-						
-						var newText = this.lang[lang][defaultLangText] || currentText;
-						var newHtml = currentText.replace(currentText, newText);
-						langElem.html(newHtml);
-						
-						if (currentText != newHtml) {
-							langElem.attr('lang', lang);
-						}
-					}
-				} else {
-					//console.log('No language data for element... have you executed .run() first?');
-				}
-			}
-		} else {
-			console.log('Cannot switch language, no language pack defined for "' + lang + '"');
-		}
-	} else {
-		// Restore the deftext data
-		langElems.each(function () {
-			var langElem = $(this);
+	if (this.lang[lang]) {
+		var elemsLength = langElems.length;
+		while (elemsLength--) {
+			var elem = langElems[elemsLength];
+			var langElem = $(elem);
 			if (langElem.data('deftext')) {
 				if (langElem.is("input")) {
 					// An input element
 					switch (langElem.attr('type')) {
 						case 'button':
 						case 'submit':
-							langElem.val(langElem.data('deftext'));
+							// A button or submit, change the value attribute
+							var currentText = langElem.val();
+							var defaultLangText = langElem.data('deftext');
+							
+							var newText = this.lang[lang][defaultLangText] || currentText;
+							var newHtml = currentText.replace(currentText, newText);
+							langElem.val(newHtml);
 						break;
-						
+						case 'password':
 						case 'text':
 							// Check for a placeholder text value
-							langElem.attr('placeholder', langElem.data('deftext'));
+							var currentText = langElem.attr('placeholder');
+							var defaultLangText = langElem.data('deftext');
+							
+							var newText = this.lang[lang][defaultLangText] || currentText;
+							var newHtml = currentText.replace(currentText, newText);
+							langElem.attr('placeholder', newHtml);
 						break;
 					}
 				} else {
-					langElem.html(langElem.data('deftext'));
+					// Not an input element
+					var currentText = langElem.html();
+					var defaultLangText = langElem.data('deftext');
+					
+					var newText = this.lang[lang][defaultLangText] || currentText;
+					var newHtml = currentText.replace(currentText, newText);
+					langElem.html(newHtml);
 				}
+			} else {
+				//console.log('No language data for element... have you executed .run() first?');
 			}
-		});
+		}
+	} else {
+		console.log('Cannot switch language, no language pack defined for "' + lang + '"');
 	}
 }
 
