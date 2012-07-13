@@ -1,3 +1,20 @@
+/**
+ * jQuery Multi-Language Plugin  
+ * 
+ * This plugin provides multi language support across all common browsers and 
+ * does not require a page reload. It can be used to change simple text 
+ * containers content (i.e. <span>, <p>, <div>, ...) as well as input values
+ * (i.e. type is button or submit) and placeholder (i.e. type is email, password 
+ * or text) and title attribues of any tag.
+ * 
+ * Please see the source page on how to use this.
+ * 
+ * Changelog:
+ *  - Added support for title attribute and input types email and password
+ * 
+ * Source: http://www.isogenicengine.com/documentation/jquery-multi-language-site-plugin/
+**/
+
 var IgeEventsLite = function () {}
 
 IgeEventsLite.prototype.on = function (evtName, fn) {
@@ -49,21 +66,29 @@ jquery_lang_js.prototype.run = function () {
 			var langElem = $(elem);
 			
 			if (langElem.attr('lang') == this.defaultLang) {
-				if (langElem.is("input")) {
-					// An input element
-					switch (langElem.attr('type')) {
-						case 'button':
-						case 'submit':
-							langElem.data('deftext', langElem.val());
-						break;
-						
-						case 'text':
-							// Check for a placeholder text value
-							var plText = langElem.attr('placeholder');
-							if (plText) {
-								langElem.data('deftext', plText);
-							}
-						break;
+				var titleText = langElem.attr('title');
+				if (titleText || langElem.is("input")) {
+					if (titleText) {
+						langElem.data('deftexttitle', titleText);
+					}
+					if (langElem.is("input")) {
+						// An input element
+						switch (langElem.attr('type')) {
+							case 'button':
+							case 'submit':
+								langElem.data('deftext', langElem.val());
+							break;
+
+							case 'email':
+							case 'password':
+							case 'text':
+								// Check for a placeholder text value
+								var plText = langElem.attr('placeholder');
+								if (plText) {
+									langElem.data('deftext', plText);
+								}
+							break;
+						}
 					}
 				} else {
 					// Not an input element
@@ -103,6 +128,20 @@ jquery_lang_js.prototype.change = function (lang) {
 			while (elemsLength--) {
 				var elem = langElems[elemsLength];
 				var langElem = $(elem);
+				if (langElem.data('deftexttitle')) {
+					if (langElem.attr('title')) {
+						// Check for a title attribute
+						var currentText = langElem.attr('title');
+						var defaultLangText = langElem.data('deftexttitle');
+				
+						var newText = this.lang[lang][defaultLangText] || currentText;
+						var newHtml = currentText.replace(currentText, newText);
+						langElem.attr('title', newHtml);
+						if (currentText != newHtml) {
+							langElem.attr('lang', lang);
+						}
+					}
+				}
 				if (langElem.data('deftext')) {
 					if (langElem.is("input")) {
 						// An input element
@@ -121,7 +160,9 @@ jquery_lang_js.prototype.change = function (lang) {
 									langElem.attr('lang', lang);
 								}
 							break;
-							
+
+							case 'email':
+							case 'password':
 							case 'text':
 								// Check for a placeholder text value
 								var currentText = langElem.attr('placeholder');
@@ -160,6 +201,12 @@ jquery_lang_js.prototype.change = function (lang) {
 		// Restore the deftext data
 		langElems.each(function () {
 			var langElem = $(this);
+			if (langElem.data('deftexttitle')) {
+				// handle title attribute
+				if (langElem.attr('title')) {
+					langElem.attr('title', langElem.data('deftexttitle'));
+				}
+			}
 			if (langElem.data('deftext')) {
 				if (langElem.is("input")) {
 					// An input element
@@ -169,6 +216,8 @@ jquery_lang_js.prototype.change = function (lang) {
 							langElem.val(langElem.data('deftext'));
 						break;
 						
+						case 'email':
+						case 'password':
 						case 'text':
 							// Check for a placeholder text value
 							langElem.attr('placeholder', langElem.data('deftext'));
