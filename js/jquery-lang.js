@@ -148,17 +148,9 @@ jquery_lang_js.prototype.change = function (lang) {
 
 jquery_lang_js.prototype.convert = function (text, lang) {
 	if (lang) {
-		if (lang != this.defaultLang) {
-			return this.lang[lang][text];
-		} else {
-			return text;
-		}
+		return this.lang[lang][text];
 	} else {
-		if (this.currentLang != this.defaultLang) {
-			return this.lang[this.currentLang][text];
-		} else {
-			return text;
-		}
+		return this.lang[this.currentLang][text];
 	}
 }
 
