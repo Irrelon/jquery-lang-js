@@ -14,41 +14,42 @@ http://www.isogenicengine.com/jquery-lang-js/
 Include the plugin script in your head tag and include any language pack you have created ensuring that you specify the charset attribute as utf-8. All language pack files should be saved as utf-8 encoded:
 
     <script src="js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
+    <script src="js/langpack/en.js" charset="utf-8" type="text/javascript"></script>
     <script src="js/langpack/th.js" charset="utf-8" type="text/javascript"></script>
 
-When your page is loaded simply call the .run() method as so:
+When your page is loaded simply call the .run() method as so, specifying the default language:
 
     <script type="text/javascript">
 	window.lang = new jquery_lang_js();
 	$().ready(function () {
-		window.lang.run();
+		window.lang.run("th");
 	});
     </script>
 
 # Defining which elements to translate
 
-In the HTML content itself you can denote an element as being available for translation by adding a "lang" attribute with the language of the content as such:
+In the HTML content itself you can denote an element as being available for translation by adding a "jql" attribute as such:
 
-    <span lang="en">Translate me</span>
+    <span jql>translate_me</span>
 
 Or any element with some content such as:
 
     <select name="testSelect">
-        <option lang="en" value="1">An option phrase to translate</option>
-        <option lang="en" value="2">Another phrase to translate</option>
+        <option jql value="1">an_option_phrase_to_translate</option>
+        <option jql" value="2">another_phrase_to_translate</option>
     </select>
 
 # Button elements
 
 The plugin will automatically translate button element text when defined like this:
 
-    <button lang="en">Some button text</button>
+    <button jql>Some button text</button>
 
 # Placeholder text
 
 You can also translate placeholder text like this:
 
-    <input type="text" placeholder="my placeholder text" lang="en" />
+    <input type="text" placeholder="my_placeholder_text" jql />
 
 When you change languages, the plugin will update the placeholder text where a translation exists.
 
@@ -56,7 +57,7 @@ When you change languages, the plugin will update the placeholder text where a t
 
 If you need to know the current translation value of some text in your JavaScript code such as when calling alert() you can use the convert() method:
 
-    alert(window.lang.convert('Some text to translate'));
+    alert(window.lang.convert('some_text_to_translate'));
 
 # Dynamic content
 
@@ -75,13 +76,13 @@ The onclick event is the only part that matters, you can apply the onclick to an
 Language packs are defined in JS files and are added to the plugin like so:
 
     jquery_lang_js.prototype.lang.th = {
-        'Property Search':'ค้นหา',
-        'Location':'สถานที่ตั้ง',
-        'Budget':'งบประมาณ',
-        'An option phrase to translate':'งบประมาณงบประมาณสถานที่ตั้ง',
+        'property_search':'ค้นหา',
+        'location':'สถานที่ตั้ง',
+        'budget':'งบประมาณ',
+        'an_option_phrase_to_translate':'งบประมาณงบประมาณสถานที่ตั้ง',
     }
 
-That example just defined a language pack to translate from the default page language English into Thai (th). Each property inside the object has a key that is the English phrase, then the value is the Thai equivalent.
+That example just defined a language pack to translate into Thai (th). Each property inside the object has a key that is a label, then the value is the Thai message relative to such label.
 
 It's that simple!
 
