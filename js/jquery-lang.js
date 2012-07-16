@@ -39,7 +39,9 @@ jquery_lang_js.prototype.defaultLang;
 jquery_lang_js.prototype.currentLang;
 
 jquery_lang_js.prototype.run = function (defLang) {
-	this.defaultLang = defLang;
+	if(defLang) {
+		this.defaultLang = defLang;
+	}
 	var langElems = $('[jql]');
 	var elemsLength = langElems.length;
 	
