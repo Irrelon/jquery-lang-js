@@ -79,6 +79,7 @@ jquery_lang_js.prototype.run = function (defLang) {
 			this.currentLang = lsLang;
 			this.change(lsLang);
 		} else {
+			this.currentLang = this.defaultLang;
 			this.change(this.defaultLang);
 		}
 	} else {
