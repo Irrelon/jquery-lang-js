@@ -201,6 +201,7 @@ jquery_lang_js.prototype.change = function (lang) {
 		// Restore the deftext data
 		langElems.each(function () {
 			var langElem = $(this);
+			langElem.attr('lang', lang);
 			if (langElem.data('deftexttitle')) {
 				// handle title attribute
 				if (langElem.attr('title')) {
