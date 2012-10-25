@@ -39,8 +39,11 @@ jquery_lang_js.prototype.defaultLang;
 jquery_lang_js.prototype.currentLang;
 
 jquery_lang_js.prototype.run = function (defLang) {
-	if(defLang) {
+	if(defLang){
 		this.defaultLang = defLang;
+	}
+	if(!this.currentLang){
+		this.currentLang=this.defaultLang;
 	}
 	var langElems = $('[jql]');
 	var elemsLength = langElems.length;
@@ -55,20 +58,27 @@ jquery_lang_js.prototype.run = function (defLang) {
 				switch (langElem.attr('type')) {
 					case 'button':
 					case 'submit':
-						langElem.data('deftext', langElem.val());
+						/*
+						quando cambio pagine con jqm, questo valore e' gia' stato trasformato nella stringa effettiva!!!
+						*/
+						if(!langElem.data('deftext')){
+							langElem.data('deftext', langElem.val());
+						}
 					break;
 					case 'password':
 					case 'text':
 						// Check for a placeholder text value
 						var plText = langElem.attr('placeholder');
-						if (plText) {
+						if (plText && !langElem.data('deftext')) {
 							langElem.data('deftext', plText);
 						}
 					break;
 				}
 			} else {
 				// Not an input element
-				langElem.data('deftext', langElem.html());
+				if(!langElem.data('deftext')){
+					langElem.data('deftext', langElem.html());
+				}
 			}
 		}
 	}
@@ -95,7 +105,9 @@ jquery_lang_js.prototype.loadPack = function (packPath) {
 	
 jquery_lang_js.prototype.change = function (lang) {
 	//console.log('Changing language to ' + lang);
-	if (this.currentLang != lang) { this.update(lang); }
+	if (this.currentLang != lang) { 
+		this.update(lang); 
+	}
 	this.currentLang = lang;
 	
 	// Get the page HTML
@@ -119,7 +131,7 @@ jquery_lang_js.prototype.change = function (lang) {
 							var newText = this.lang[lang][defaultLangText] || currentText;
 							var newHtml = currentText.replace(currentText, newText);
 							langElem.val(newHtml);
-						break;
+							break;
 						case 'password':
 						case 'text':
 							// Check for a placeholder text value
@@ -129,14 +141,15 @@ jquery_lang_js.prototype.change = function (lang) {
 							var newText = this.lang[lang][defaultLangText] || currentText;
 							var newHtml = currentText.replace(currentText, newText);
 							langElem.attr('placeholder', newHtml);
-						break;
+							break;
 					}
 				} else {
 					// Not an input element
 					var currentText = langElem.html();
 					var defaultLangText = langElem.data('deftext');
 					
-					var newText = this.lang[lang][defaultLangText] || currentText;
+					var dlt = this.lang[lang][defaultLangText];
+					var newText = dlt || currentText;
 					var newHtml = currentText.replace(currentText, newText);
 					langElem.html(newHtml);
 				}
