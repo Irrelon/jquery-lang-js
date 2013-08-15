@@ -87,8 +87,9 @@ It's that simple!
 
 # Right-to-left languages
 
-While translating into right-to-left languages, you may want to have some modification to page layout, e.g. setting
-the body direction. To do this, you can optionally specify a `bidiHandler` for your translation:
+While translating into right-to-left languages, you may want to have some modification to page layout, for example, updating
+page's text direction according to the currently active language. To do this, you can optionally specify a `bidiHandler` for
+your translation:
 
     jquery_lang_js.prototype.lang.fa = {
         // translations here...
@@ -103,8 +104,8 @@ the body direction. To do this, you can optionally specify a `bidiHandler` for y
         }
     };
 
-In the code above, `rtl: true` will add `style="direction:rtl"` to the body tag when this language is activated
-and removed it when switched to another language.  The `setup`  and `rollback` function are called when this language
+In the code above, `rtl: true` will add `style="direction:rtl"` to the body tag when Farsi (fa) language is activated
+and removes it when switched to another language.  The `setup`  and `rollback` functions are called when this language
 is activated or deactivated, respectively. All these three options are optional and you can provide any of them that
 is needed, however, don't forget to provide a corresponding rollback function if you have a custom setup function.
 
