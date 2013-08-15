@@ -47,6 +47,8 @@ var jquery_lang_js = function () {
 	
 	this.on = this.events.on;
 	this.emit = this.events.emit;
+
+    this.currentBidiHandler = null;
 	
 	return this;
 }
@@ -253,4 +255,31 @@ jquery_lang_js.prototype.update = function (lang) {
 		localStorage.setItem('langJs_currentLang', lang);
 	}
 	this.emit('update', lang);
+    this.handleBidiChange(lang);
 }
+
+jquery_lang_js.prototype.handleBidiChange = function (lang) {
+    var dstDirection = null; // null means no change is needed
+    if (this.currentBidiHandler) {
+        if (this.currentBidiHandler.rollback) {
+            this.currentBidiHandler.rollback();
+        }
+        if (this.currentBidiHandler.rtl) {
+            dstDirection = 'ltr';
+        }
+    }
+    if (this.lang[lang] && this.lang[lang].bidiHandler) {
+        this.currentBidiHandler = this.lang[lang].bidiHandler;
+        if (this.lang[lang].bidiHandler.rtl) {
+            dstDirection = 'rtl';
+        }
+        if (this.lang[lang].bidiHandler.setup) {
+            this.lang[lang].bidiHandler.setup();
+        }
+    } else {
+        this.currentBidiHandler = null;
+    }
+    if (dstDirection) {
+        $('body').css('direction', dstDirection);
+    }
+};
