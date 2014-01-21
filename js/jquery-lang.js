@@ -76,6 +76,7 @@ jquery_lang_js.prototype.run = function () {
 						switch (langElem.attr('type')) {
 							case 'button':
 							case 'submit':
+							case 'reset':
 								langElem.data('deftext', langElem.val());
 							break;
 
@@ -149,6 +150,7 @@ jquery_lang_js.prototype.change = function (lang) {
 						switch (langElem.attr('type')) {
 							case 'button':
 							case 'submit':
+							case 'reset':
 								// A button or submit, change the value attribute
 								var currentText = langElem.val();
 								var defaultLangText = langElem.data('deftext');
@@ -214,6 +216,7 @@ jquery_lang_js.prototype.change = function (lang) {
 					switch (langElem.attr('type')) {
 						case 'button':
 						case 'submit':
+						case 'reset':
 							langElem.val(langElem.data('deftext'));
 						break;
 						
