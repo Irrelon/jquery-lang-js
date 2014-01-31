@@ -3,12 +3,6 @@
 
 This jQuery plugin allows you to create multiple language versions of your content by supplying phrase translations from a default language such as English to other languages.
 
-# Example
-
-On the example page the language pack used is English to Thai.
-
-http://www.isogenicengine.com/jquery-lang-js/
-
 # How to use
 
 Include the plugin script in your head tag and include any language pack you have created ensuring that you specify the charset attribute as utf-8. All language pack files should be saved as utf-8 encoded:
@@ -19,10 +13,8 @@ Include the plugin script in your head tag and include any language pack you hav
 When your page is loaded simply call the .run() method as so:
 
     <script type="text/javascript">
-	window.lang = new jquery_lang_js();
-	$().ready(function () {
-		window.lang.run();
-	});
+    // Create language switcher instance and set default language to en and current language to en
+	window.lang = new Lang('en', 'en');
     </script>
 
 # Defining which elements to translate
@@ -54,9 +46,9 @@ When you change languages, the plugin will update the placeholder text where a t
 
 # Translating other text in JavaScript such as alert() calls
 
-If you need to know the current translation value of some text in your JavaScript code such as when calling alert() you can use the convert() method:
+If you need to know the current translation value of some text in your JavaScript code such as when calling alert() you can use the translate() method:
 
-    alert(window.lang.convert('Some text to translate'));
+    alert(window.lang.translate('Some text to translate'));
 
 # Dynamic content
 

@@ -230,28 +230,22 @@ var Lang = (function () {
 	};
 
 	Lang.prototype.translate = function (text, lang) {
-		if (lang) {
-			var translation = '';
+		lang = lang || this.currentLang;
 
-			if (lang != this.defaultLang) {
-				// Check for a direct token translation
-				translation = this.pack[lang].token[text];
+		var translation = '';
 
-				if (!translation) {
-					// No token translation was found, test for regex match
-					translation = this._regexMatch(lang, text);
-				}
+		if (lang != this.defaultLang) {
+			// Check for a direct token translation
+			translation = this.pack[lang].token[text];
 
-				return translation || text;
-			} else {
-				return text;
+			if (!translation) {
+				// No token translation was found, test for regex match
+				translation = this._regexMatch(lang, text);
 			}
+
+			return translation || text;
 		} else {
-			if (this.currentLang != this.defaultLang) {
-				return this.pack[this.currentLang][text] || text;
-			} else {
-				return text;
-			}
+			return text;
 		}
 	};
 
