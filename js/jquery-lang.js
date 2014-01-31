@@ -1,259 +1,287 @@
-/**
- * jQuery Multi-Language Plugin  
- * 
- * This plugin provides multi language support across all common browsers and 
- * does not require a page reload. It can be used to change simple text 
- * containers content (i.e. <span>, <p>, <div>, ...) as well as input values
- * (i.e. type is button or submit) and placeholder (i.e. type is email, password 
- * or text) and title attribues of any tag.
- * 
- * Please see the source page on how to use this.
- * 
- * Changelog:
- *  - Added support for title attribute and input types email and password
- * 
- * Source: http://www.isogenicengine.com/documentation/jquery-multi-language-site-plugin/
-**/
+/*
+ The MIT License (MIT)
 
-var IgeEventsLite = function () {}
+ Copyright (c) 2014 Irrelon Software Limited
+ http://www.irrelon.com
 
-IgeEventsLite.prototype.on = function (evtName, fn) {
-	if (evtName && fn) {
-		this.eventList[evtName] = this.eventList[evtName] || [];
-		this.eventList[evtName].push(fn);
-	}
-}
-	
-IgeEventsLite.prototype.emit = function (evtName) {
-	if (evtName) {
-		this.eventList = this.eventList || [];
-		var args = [];
-		for (var i = 1; i < arguments.length; i++) {
-			args.push(arguments[i]);
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice, url and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+
+ Source: https://github.com/coolbloke1324/jquery-lang-js
+
+ Changelog:
+ Version 2.0.0 - Complete re-write.
+ */
+var Lang = (function () {
+	var Lang = function (defaultLang, currentLang) {
+		this.defaultLang = defaultLang || 'en';
+		this.currentLang = defaultLang || 'en';
+
+		// Setup data on the language items
+		this._start();
+
+		// Check if the current language is not the same as our default
+		if (currentLang !== this.currentLang) {
+			// Switch to the current language
+			this.change(currentLang);
 		}
-		if (evtName) {
-			var fnList = this.eventList[evtName];
-			for (var i in fnList) {
-				if (typeof fnList[i] == 'function') {
-					fnList[i].apply(this, args);
+	};
+
+	/**
+	 * Object that holds the language packs.
+	 * @type {{}}
+	 */
+	Lang.prototype.pack = {};
+
+	/**
+	 * Array of translatable attributes to check for on elements.
+	 * @type {string[]}
+	 */
+	Lang.prototype.attrList = [
+		'title',
+		'alt',
+		'placeholder'
+	];
+
+	/**
+	 * Loads a new language pack from the given url.
+	 * @param {string} packPath The url to load the pack from.
+	 */
+	Lang.prototype.loadPack = function (packPath) {
+		if (packPath) {
+			$('<script type="text/javascript" charset="utf-8" src="' + packPath + '" />').appendTo("head");
+		} else {
+			throw('Cannot load language pack, no file path specified!');
+		}
+	};
+
+	/**
+	 * Scans the DOM for elements with [lang] selector and saves translate data
+	 * for them for later use.
+	 * @private
+	 */
+	Lang.prototype._start = function () {
+		// Get the page HTML
+		var arr = $(':not(html)[lang]'),
+			arrCount = arr.length,
+			elem;
+
+		while (arrCount--) {
+			elem = $(arr[arrCount]);
+
+			if (elem.attr('lang') === this.defaultLang) {
+				// Store translatable attributes
+				this._storeAttribs(elem);
+
+				// Store translatable content
+				this._storeContent(elem);
+			}
+		}
+	};
+
+	/**
+	 * Stores the translatable attribute values in their default language.
+	 * @param {object} elem The jQuery selected element.
+	 * @private
+	 */
+	Lang.prototype._storeAttribs = function (elem) {
+		var attr,
+			attrObj;
+
+		for (attr in this.attrList) {
+			if (this.attrList.hasOwnProperty(attr)) {
+				if (elem.attr(attr)) {
+					// Grab the existing attribute store or create a new object
+					attrObj = elem.data('lang-attr') || {};
+
+					// Add the attribute and value to the store
+					attrObj[attr] = elem.attr(attr);
+
+					// Save the attribute data to the store
+					elem.data('lang-attr', attrObj);
 				}
 			}
 		}
-	}
-}
+	};
 
-var jquery_lang_js = function () {
-	this.events = new IgeEventsLite();
-	
-	this.on = this.events.on;
-	this.emit = this.events.emit;
-	
-	return this;
-}
-
-jquery_lang_js.prototype.lang = {};
-jquery_lang_js.prototype.defaultLang = 'en';
-jquery_lang_js.prototype.currentLang = 'en';
-
-jquery_lang_js.prototype.run = function () {
-	var langElems = $('[lang]');
-	var elemsLength = langElems.length;
-	
-	while (elemsLength--) {
-		var elem = langElems[elemsLength];
-		var elemType = elem.tagName;
-		if(elemType!='HTML'){
-			var langElem = $(elem);
-			
-			if (langElem.attr('lang') == this.defaultLang) {
-				var titleText = langElem.attr('title');
-				if (titleText || langElem.is("input")) {
-					if (titleText) {
-						langElem.data('deftexttitle', titleText);
-					}
-					if (langElem.is("input")) {
-						// An input element
-						switch (langElem.attr('type')) {
-							case 'button':
-							case 'submit':
-							case 'reset':
-								langElem.data('deftext', langElem.val());
-							break;
-
-							case 'email':
-							case 'password':
-							case 'text':
-								// Check for a placeholder text value
-								var plText = langElem.attr('placeholder');
-								if (plText) {
-									langElem.data('deftext', plText);
-								}
-							break;
-						}
-					}
-				} else {
-					// Not an input element
-					langElem.data('deftext', langElem.html());
-				}
+	Lang.prototype._storeContent = function (elem) {
+		// Check if the element is an input element
+		if (elem.is('input')) {
+			switch (elem.attr('type')) {
+				case 'button':
+				case 'submit':
+				case 'reset':
+					elem.data('lang-val', elem.val());
+					break;
 			}
+		} else {
+			elem.data('lang-html', elem.html());
 		}
-	}
-	
-	
-	// Now that the language system is setup, check
-	// if there is a default language and switch to it
-	if (localStorage) {
-		var lsLang = localStorage.getItem('langJs_currentLang');
-		if (lsLang) {
-			this.change(lsLang);
-		}
-		else
-			this.change(this.currentLang);			
-	}
-}
+	};
 
-jquery_lang_js.prototype.loadPack = function (packPath) {
-	$('<script type="text/javascript" charset="utf-8" src="' + packPath + '" />').appendTo("head");
-}
-	
-jquery_lang_js.prototype.change = function (lang) {
-	//console.log('Changing language to ' + lang);
-	if (this.currentLang != lang) { this.update(lang); }
-	this.currentLang = lang;
-	
-	// Get the page HTML
-	var langElems = $('[lang]');
-		
-	if (lang != this.defaultLang) {
-		if (this.lang[lang]) {
-			var elemsLength = langElems.length;
-			while (elemsLength--) {
-				var elem = langElems[elemsLength];
-				var langElem = $(elem);
-				if (langElem.data('deftexttitle')) {
-					if (langElem.attr('title')) {
-						// Check for a title attribute
-						var currentText = langElem.attr('title');
-						var defaultLangText = langElem.data('deftexttitle');
-				
-						var newText = this.lang[lang][defaultLangText] || currentText;
-						var newHtml = currentText.replace(currentText, newText);
-						langElem.attr('title', newHtml);
-						if (currentText != newHtml) {
-							langElem.attr('lang', lang);
-						}
-					}
-				}
-				if (langElem.data('deftext')) {
-					if (langElem.is("input")) {
-						// An input element
-						switch (langElem.attr('type')) {
-							case 'button':
-							case 'submit':
-							case 'reset':
-								// A button or submit, change the value attribute
-								var currentText = langElem.val();
-								var defaultLangText = langElem.data('deftext');
-								
-								var newText = this.lang[lang][defaultLangText] || currentText;
-								var newHtml = currentText.replace(currentText, newText);
-								langElem.val(newHtml);
-								
-								if (currentText != newHtml) {
-									langElem.attr('lang', lang);
-								}
-							break;
+	Lang.prototype._translateAttribs = function (elem, lang) {
+		var attr,
+			attrObj = elem.data('lang-attr') || {},
+			translation;
 
-							case 'email':
-							case 'password':
-							case 'text':
-								// Check for a placeholder text value
-								var currentText = langElem.attr('placeholder');
-								var defaultLangText = langElem.data('deftext');
-								
-								var newText = this.lang[lang][defaultLangText] || currentText;
-								var newHtml = currentText.replace(currentText, newText);
-								langElem.attr('placeholder', newHtml);
-								
-								if (currentText != newHtml) {
-									langElem.attr('lang', lang);
-								}
-							break;
+		for (attr in attrObj) {
+			if (attrObj.hasOwnProperty(attr)) {
+				// Check the element still has the attribute
+				if (elem.attr(attr)) {
+					if (lang !== this.defaultLang) {
+						// Get the translated value
+						translation = this.translate(attrObj[attr], lang);
+
+						// Check we actually HAVE a translation
+						if (translation) {
+							// Change the attribute to the translated value
+							elem.attr(attr, translation);
 						}
 					} else {
-						// Not an input element
-						var currentText = langElem.html();
-						var defaultLangText = langElem.data('deftext');
-						
-						var newText = this.lang[lang][defaultLangText] || currentText;
-						var newHtml = currentText.replace(currentText, newText);
-						langElem.html(newHtml);
-						
-						if (currentText != newHtml) {
-							langElem.attr('lang', lang);
-						}
+						// Set default language value
+						elem.attr(attr, attrObj[attr]);
 					}
-				} else {
-					//console.log('No language data for element... have you executed .run() first?');
 				}
 			}
-		} else {
-			console.log('Cannot switch language, no language pack defined for "' + lang + '"');
 		}
-	} else {
-		// Restore the deftext data
-		langElems.each(function () {
-			var langElem = $(this);
-			if (langElem.data('deftexttitle')) {
-				// handle title attribute
-				if (langElem.attr('title')) {
-					langElem.attr('title', langElem.data('deftexttitle'));
-				}
-			}
-			if (langElem.data('deftext')) {
-				if (langElem.is("input")) {
-					// An input element
-					switch (langElem.attr('type')) {
-						case 'button':
-						case 'submit':
-						case 'reset':
-							langElem.val(langElem.data('deftext'));
-						break;
-						
-						case 'email':
-						case 'password':
-						case 'text':
-							// Check for a placeholder text value
-							langElem.attr('placeholder', langElem.data('deftext'));
-						break;
-					}
-				} else {
-					langElem.html(langElem.data('deftext'));
-				}
-			}
-		});
-	}
-}
-// if text does not in language data???
-jquery_lang_js.prototype.convert = function (text, lang) {
-	if (lang) {
-		if (lang != this.defaultLang) {
-			return this.lang[lang][text] || text;
-		} else {
-			return text;
-		}
-	} else {
-		if (this.currentLang != this.defaultLang) {
-			return this.lang[this.currentLang][text] || text;
-		} else {
-			return text;
-		}
-	}
-}
+	};
 
-jquery_lang_js.prototype.update = function (lang) {
-	if (localStorage) {
-		localStorage.setItem('langJs_currentLang', lang);
+	Lang.prototype._translateContent = function (elem, lang) {
+		var langNotDefault = lang !== this.defaultLang,
+			translation;
+
+		// Check if the element is an input element
+		if (elem.is('input')) {
+			switch (elem.attr('type')) {
+				case 'button':
+				case 'submit':
+				case 'reset':
+					if (langNotDefault) {
+						// Get the translated value
+						translation = this.translate(elem.data('lang-val'), lang);
+
+						// Check we actually HAVE a translation
+						if (translation) {
+							// Set translated value
+							elem.val(translation);
+						}
+					} else {
+						// Set default language value
+						elem.val(elem.data('lang-val'));
+					}
+					break;
+			}
+		} else {
+			if (langNotDefault) {
+				// Get the translated value
+				translation = this.translate(elem.data('lang-html'), lang);
+
+				// Check we actually HAVE a translation
+				if (translation) {
+					// Set translated value
+					elem.html(translation);
+				}
+			} else {
+				// Set default language value
+				elem.html(elem.data('lang-html'));
+			}
+		}
+	};
+
+	Lang.prototype.change = function (lang) {
+		//console.log('Changing language to ' + lang);
+		if (this.currentLang != lang) { this.update(lang); }
+		this.currentLang = lang;
+
+		// Get the page HTML
+		var arr = $(':not(html)[lang]'),
+			arrCount = arr.length,
+			elem;
+
+		while (arrCount--) {
+			elem = $(arr[arrCount]);
+
+			if (elem.attr('lang') !== lang) {
+				// Translate attributes
+				this._translateAttribs(elem, lang);
+
+				// Translate content
+				this._translateContent(elem, lang);
+
+				// Update the element's current language
+				elem.attr('lang', lang);
+			}
+		}
+	};
+
+	Lang.prototype.translate = function (text, lang) {
+		if (lang) {
+			var translation = '';
+
+			if (lang != this.defaultLang) {
+				// Check for a direct token translation
+				translation = this.pack[lang].token[text];
+
+				if (!translation) {
+					// No token translation was found, test for regex match
+					translation = this._regexMatch(lang, text);
+				}
+
+				return translation || text;
+			} else {
+				return text;
+			}
+		} else {
+			if (this.currentLang != this.defaultLang) {
+				return this.pack[this.currentLang][text] || text;
+			} else {
+				return text;
+			}
+		}
+	};
+
+	Lang.prototype._regexMatch = function (lang, text) {
+		// Loop the regex array and test them against the text
+		var arr = this.pack[lang].regex,
+			arrCount = arr.length,
+			arrIndex,
+			item,
+			regex,
+			expressionResult;
+
+		for (arrIndex = 0; arrIndex < arrCount; arrIndex++) {
+			item = arr[arrIndex];
+			regex = item[0];
+
+			// Test regex
+			expressionResult = regex.exec(text);
+
+			if (expressionResult && expressionResult[0]) {
+				return text.split(expressionResult[0]).join(item[1]);
+			}
+		}
+
+		return '';
 	}
-	this.emit('update', lang);
-}
+
+	Lang.prototype.update = function (lang) {
+
+	};
+
+	return Lang;
+})();
