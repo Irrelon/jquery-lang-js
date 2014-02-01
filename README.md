@@ -16,8 +16,8 @@ translations from a default language such as English to other languages.
 
 # How to use
 
-* If you want language selection to persist across pages automatically, please ensure you include the
-jquery-cookie plugin available from: https://github.com/carhartl/jquery-cookie on your page as well.
+*If you want language selection to persist across pages automatically, please ensure you include the
+jquery-cookie plugin available from: https://github.com/carhartl/jquery-cookie on your page as well.*
 
 Include the plugin script in your head tag and include any language pack you have created ensuring that
 you specify the charset attribute as utf-8. All language pack files should be saved as utf-8 encoded:
