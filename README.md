@@ -1,25 +1,39 @@
 # Instantly switch content languages client-side
-### Change language without reloading the page or doing a request to the server. See the example!!
+### Change language without reloading the page or doing a request to the server. See the example provided in index.html
 
-This jQuery plugin allows you to create multiple language versions of your content by supplying phrase translations from a default language such as English to other languages.
+This jQuery plugin allows you to create multiple language versions of your content by supplying phrase
+translations from a default language such as English to other languages.
+
+# Changelog
+2014-02-01 - Version 2.0
+* Complete plugin re-write
+* Added cookies for persistence when $.cookie exists
+* Supports automatic translation for dynamically added content (when added via jQuery)
+* Added support for regular expression matches
+* Added support for translating text nodes mixed with html nodes
 
 # How to use
 
-Include the plugin script in your head tag and include any language pack you have created ensuring that you specify the charset attribute as utf-8. All language pack files should be saved as utf-8 encoded:
+* If you want language selection to persist across pages automatically, please ensure you include the
+jquery-cookie plugin available from: https://github.com/carhartl/jquery-cookie on your page as well.
+
+Include the plugin script in your head tag and include any language pack you have created ensuring that
+you specify the charset attribute as utf-8. All language pack files should be saved as utf-8 encoded:
 
     <script src="js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
     <script src="js/langpack/th.js" charset="utf-8" type="text/javascript"></script>
 
-When your page is loaded simply call the .run() method as so:
+Add the following to your HTML page in either the head or body:
 
     <script type="text/javascript">
-    // Create language switcher instance and set default language to en and current language to en
-	window.lang = new Lang('en', 'en');
+    // Create language switcher instance and set default language to en
+	window.lang = new Lang('en');
     </script>
 
 # Defining which elements to translate
 
-In the HTML content itself you can denote an element as being available for translation by adding a "lang" attribute with the language of the content as such:
+In the HTML content itself you can denote an element as being available for translation by adding a "lang"
+attribute with the language of the content as such:
 
     <span lang="en">Translate me</span>
 
@@ -46,17 +60,21 @@ When you change languages, the plugin will update the placeholder text where a t
 
 # Translating other text in JavaScript such as alert() calls
 
-If you need to know the current translation value of some text in your JavaScript code such as when calling alert() you can use the translate() method:
+If you need to know the current translation value of some text in your JavaScript code such as when calling
+alert() you can use the translate() method:
 
     alert(window.lang.translate('Some text to translate'));
 
 # Dynamic content
 
-If you load content dynamically the plugin will need to know when the content has been loaded in order to work correctly. After loading any content always call the plugin's .run() method which will automatically scan the content and translate into the current language.
+If you load content dynamically and add it to the DOM using jQuery the plugin will AUTOMATICALLY translate
+to the current language. Ensure you have added "lang" attributes to any HTML that you want translated BEFORE
+you add it to the DOM.
 
 # Switching languages
 
-To switch languages simply call the .change() method, passing the two-letter language code to switch to. For instance here is a switcher that will change between English and Thai as used in the example page:
+To switch languages simply call the .change() method, passing the two-letter language code to switch to. For
+instance here is a switcher that will change between English and Thai as used in the example page:
 
     <a href="#lang-en" onclick="window.lang.change('en');">Switch to English</a> | <a href="#lang-en" onclick="window.lang.change('th');">Switch to Thai</a>
 
@@ -67,20 +85,47 @@ The onclick event is the only part that matters, you can apply the onclick to an
 Language packs are defined in JS files and are added to the plugin like so:
 
     jquery_lang_js.prototype.lang.th = {
-        'Property Search':'ค้นหา',
-        'Location':'สถานที่ตั้ง',
-        'Budget':'งบประมาณ',
-        'An option phrase to translate':'งบประมาณงบประมาณสถานที่ตั้ง',
+    	// Define token (exact phrase) replacements here
+    	token: {
+			'Property Search':'ค้นหา',
+			'Location':'สถานที่ตั้ง',
+			'Budget':'งบประมาณ',
+			'An option phrase to translate':'งบประมาณงบประมาณสถานที่ตั้ง',
+		},
+		// Define regular expression replacements here
+		regex: [
+			[/My regex/i, 'someReplacement']
+		]
     }
 
-That example just defined a language pack to translate from the default page language English into Thai (th). Each property inside the object has a key that is the English phrase, then the value is the Thai equivalent.
+That example just defined a language pack to translate from the default page language English into Thai (th).
+Each property inside the token object has a key that is the English phrase, then the value is the Thai equivalent.
+
+The regex section allows you to specify regular expressions to use for matching and replacement. The regular expressions
+are only evaluated IF a token-based replacement is not found for a section of text.
 
 It's that simple!
 
+# Upgrades and Pull Requests
+
+We actively encourage you to upgrade this plugin and provide pull requests to share your awesome work! Please ensure
+that any changes you make are:
+
+1. Non-breaking changes
+2. Tested thoroughly against the latest version
+3. Update the changelog at the top of this file with your updates
+
+Thank you to everyone who takes their time to write updates to the plugin!
+
 # License
 
-This plugin and all code contained is Copyright 2011 Irrelon Software Limited. You are granted a license to use this code / software as you wish, free of charge and free of restrictions.
+This plugin and all code contained is Copyright 2014 Irrelon Software Limited. You are granted a license to use
+this code / software as you wish, free of charge and free of restrictions under the MIT license. See the source
+code file jquery-lang.js for the full license details.
 
 If you like this project, please consider Flattr-ing it! http://bit.ly/qCEbTC
 
-This project is part of the Isogenic Game Engine, an HTML5 MMO Real-time Multiplayer 2D & Isometric Canvas & DOM Game Engine for the Modern Web. www.isogenicengine.com
+This project is part of the Isogenic Game Engine, an HTML5 MMO Real-time Multiplayer 2D & Isometric Canvas Game
+Engine for the Modern Web.
+
+http://www.isogenicengine.com

@@ -145,6 +145,14 @@
 							<input type="button" value="Alert!" onclick="alert(window.lang.translate('Property Search'));" />
 					</td>
 				</tr>
+				
+				<tr>
+					<td>
+						Click to test loading dynamic content:
+						<input type="button" value="Load Dynamic..." onclick="$('#dyn-target').append('<div lang=\'en\'>Anytime <span lang=\'en\'>Budget</span></div>');" />
+						<div id="dyn-target"></div>
+					</td>
+				</tr>
 			</table>
 		</form>
 	</div>

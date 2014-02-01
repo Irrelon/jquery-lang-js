@@ -32,6 +32,21 @@ var Lang = (function () {
 		var self = this,
 			cookieLang;
 		
+		// Store existing mutation methods so we can auto-run
+		// translations when new data is added to the page
+		this._mutationCopies = {
+			append: $.fn.append,
+			prepend: $.fn.prepend,
+			before: $.fn.before,
+			after: $.fn.after
+		};
+		
+		// Now override the existing mutation methods with our own
+		$.fn.append = function () { self._mutation(this, 'append', arguments) };
+		$.fn.prepend = function () { self._mutation(this, 'prepend', arguments) };
+		$.fn.before = function () { self._mutation(this, 'before', arguments) };
+		$.fn.after = function () { self._mutation(this, 'after', arguments) };
+		
 		// Set default and current language to the default one
 		// to start with
 		this.defaultLang = defaultLang || 'en';
@@ -93,9 +108,9 @@ var Lang = (function () {
 	 * for them for later use.
 	 * @private
 	 */
-	Lang.prototype._start = function () {
+	Lang.prototype._start = function (selector) {
 		// Get the page HTML
-		var arr = $(':not(html)[lang]'),
+		var arr = selector !== undefined ? $(selector).find('[lang]') : $(':not(html)[lang]'),
 			arrCount = arr.length,
 			elem;
 
@@ -103,12 +118,21 @@ var Lang = (function () {
 			elem = $(arr[arrCount]);
 
 			if (elem.attr('lang') === this.defaultLang) {
-				// Store translatable attributes
-				this._storeAttribs(elem);
-
-				// Store translatable content
-				this._storeContent(elem);
+				this._processElement(elem);
 			}
+		}
+	};
+	
+	Lang.prototype._processElement = function (elem) {
+		if (!elem.data('lang-done')) {
+			// Store translatable attributes
+			this._storeAttribs(elem);
+	
+			// Store translatable content
+			this._storeContent(elem);
+			
+			// Store marker to show we've processed this element
+			elem.data('lang-done', true);
 		}
 	};
 
@@ -294,7 +318,7 @@ var Lang = (function () {
 	 * Call this to change the current language on the page.
 	 * @param {String} lang The new two-letter language code to change to.
 	 */
-	Lang.prototype.change = function (lang) {
+	Lang.prototype.change = function (lang, selector) {
 		var fireAfterUpdate = false,
 			currLang = this.currentLang;
 		
@@ -304,9 +328,9 @@ var Lang = (function () {
 		}
 		
 		this.currentLang = lang;
-
+		
 		// Get the page HTML
-		var arr = $(':not(html)[lang]'),
+		var arr = selector !== undefined ? $(selector).find('[lang]') : $(':not(html)[lang]'),
 			arrCount = arr.length,
 			elem;
 
@@ -314,14 +338,7 @@ var Lang = (function () {
 			elem = $(arr[arrCount]);
 
 			if (elem.attr('lang') !== lang) {
-				// Translate attributes
-				this._translateAttribs(elem, lang);
-
-				// Translate content
-				this._translateContent(elem, lang);
-
-				// Update the element's current language
-				elem.attr('lang', lang);
+				this._translateElement(elem, lang);
 			}
 		}
 		
@@ -337,6 +354,17 @@ var Lang = (function () {
 				path: '/'
 			});
 		}
+	};
+	
+	Lang.prototype._translateElement = function (elem, lang) {
+		// Translate attributes
+		this._translateAttribs(elem, lang);
+
+		// Translate content
+		this._translateContent(elem, lang);
+
+		// Update the element's current language
+		elem.attr('lang', lang);
 	};
 
 	/**
@@ -375,22 +403,28 @@ var Lang = (function () {
 	 */
 	Lang.prototype._regexMatch = function (text, lang) {
 		// Loop the regex array and test them against the text
-		var arr = this.pack[lang].regex,
-			arrCount = arr.length,
+		var arr,
+			arrCount,
 			arrIndex,
 			item,
 			regex,
 			expressionResult;
-
-		for (arrIndex = 0; arrIndex < arrCount; arrIndex++) {
-			item = arr[arrIndex];
-			regex = item[0];
-
-			// Test regex
-			expressionResult = regex.exec(text);
-
-			if (expressionResult && expressionResult[0]) {
-				return text.split(expressionResult[0]).join(item[1]);
+		
+		arr = this.pack[lang].regex;
+		
+		if (arr) {
+			arrCount = arr.length;
+			
+			for (arrIndex = 0; arrIndex < arrCount; arrIndex++) {
+				item = arr[arrIndex];
+				regex = item[0];
+	
+				// Test regex
+				expressionResult = regex.exec(text);
+	
+				if (expressionResult && expressionResult[0]) {
+					return text.split(expressionResult[0]).join(item[1]);
+				}
 			}
 		}
 
@@ -403,6 +437,32 @@ var Lang = (function () {
 	
 	Lang.prototype.afterUpdate = function (currentLang, newLang) {
 		$(this).triggerHandler('afterUpdate', [currentLang, newLang, this.pack[currentLang], this.pack[newLang]]);
+	};
+	
+	Lang.prototype.refresh = function () {
+		// Process refresh on the page
+		this.change(this.currentLang);
+	};
+	
+	////////////////////////////////////////////////////
+	// Mutation overrides
+	////////////////////////////////////////////////////
+	Lang.prototype._mutation = function (context, method, args) {
+		this._mutationCopies[method].apply(context, args);
+		
+		var rootElem = $(context);
+		
+		// Record data on the default language from the root element
+		this._processElement(rootElem);
+		
+		// Record data on the default language from the root's children
+		this._start(rootElem);
+		
+		// Translate the root element
+		this._translateElement(rootElem, this.currentLang);
+		
+		// Process translation on any child elements of this element
+		this.change(this.currentLang, rootElem);
 	};
 
 	return Lang;
