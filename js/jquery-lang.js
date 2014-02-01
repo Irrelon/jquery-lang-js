@@ -29,17 +29,35 @@
  */
 var Lang = (function () {
 	var Lang = function (defaultLang, currentLang) {
+		var self = this,
+			cookieLang;
+		
+		// Set default and current language to the default one
+		// to start with
 		this.defaultLang = defaultLang || 'en';
 		this.currentLang = defaultLang || 'en';
-
-		// Setup data on the language items
-		this._start();
-
-		// Check if the current language is not the same as our default
-		if (currentLang !== this.currentLang) {
-			// Switch to the current language
-			this.change(currentLang);
+		
+		// Check for cookie support when no current language is specified
+		if (!currentLang && $.cookie) {
+			// Check for an existing language cookie
+			cookieLang = $.cookie('langCookie');
+			
+			if (cookieLang) {
+				// We have a cookie language, set the current language
+				currentLang = cookieLang;
+			}
 		}
+
+		$(function () {
+			// Setup data on the language items
+			self._start();
+	
+			// Check if the current language is not the same as our default
+			if (currentLang && currentLang !== self.defaultLang) {
+				// Switch to the current language
+				self.change(currentLang);
+			}
+		})
 	};
 
 	/**
@@ -100,21 +118,21 @@ var Lang = (function () {
 	 * @private
 	 */
 	Lang.prototype._storeAttribs = function (elem) {
-		var attr,
+		var attrIndex,
+			attr,
 			attrObj;
 
-		for (attr in this.attrList) {
-			if (this.attrList.hasOwnProperty(attr)) {
-				if (elem.attr(attr)) {
-					// Grab the existing attribute store or create a new object
-					attrObj = elem.data('lang-attr') || {};
+		for (attrIndex = 0; attrIndex < this.attrList.length; attrIndex++) {
+			attr = this.attrList[attrIndex];
+			if (elem.attr(attr)) {
+				// Grab the existing attribute store or create a new object
+				attrObj = elem.data('lang-attr') || {};
 
-					// Add the attribute and value to the store
-					attrObj[attr] = elem.attr(attr);
+				// Add the attribute and value to the store
+				attrObj[attr] = elem.attr(attr);
 
-					// Save the attribute data to the store
-					elem.data('lang-attr', attrObj);
-				}
+				// Save the attribute data to the store
+				elem.data('lang-attr', attrObj);
 			}
 		}
 	};
@@ -173,20 +191,27 @@ var Lang = (function () {
 		var index,
 			textNode,
 			defaultText,
-			translation;
+			translation,
+			langNotDefault = lang !== this.defaultLang;
 		
 		for (index = 0; index < nodes.length; index++) {
 			textNode = nodes[index];
-			defaultText = $.trim(textNode.langDefaultText);
 			
-			if (defaultText) {
-				// Translate the langDefaultText
-				translation = this.translate(defaultText, lang);
+			if (langNotDefault) {
+				defaultText = $.trim(textNode.langDefaultText);
 				
-				if (translation) {
-					// Replace the text with the translated version
-					textNode.data = translation;
+				if (defaultText) {
+					// Translate the langDefaultText
+					translation = this.translate(defaultText, lang);
+					
+					if (translation) {
+						// Replace the text with the translated version
+						textNode.data = textNode.data.split(defaultText).join(translation);
+					}
 				}
+			} else {
+				// Replace with original text
+				textNode.data = textNode.langDefaultText;
 			}
 		}
 	};
@@ -259,7 +284,9 @@ var Lang = (function () {
 		} else {
 			// Set text node translated text
 			nodes = elem.data('lang-text');
-			this._setTextNodes(elem, nodes, lang);
+			if (nodes) {
+				this._setTextNodes(elem, nodes, lang);
+			}
 		}
 	};
 
@@ -268,8 +295,14 @@ var Lang = (function () {
 	 * @param {String} lang The new two-letter language code to change to.
 	 */
 	Lang.prototype.change = function (lang) {
-		//console.log('Changing language to ' + lang);
-		if (this.currentLang != lang) { this.update(lang); }
+		var fireAfterUpdate = false,
+			currLang = this.currentLang;
+		
+		if (this.currentLang != lang) {
+			this.beforeUpdate(currLang, lang);
+			fireAfterUpdate = true;
+		}
+		
 		this.currentLang = lang;
 
 		// Get the page HTML
@@ -290,6 +323,19 @@ var Lang = (function () {
 				// Update the element's current language
 				elem.attr('lang', lang);
 			}
+		}
+		
+		if (fireAfterUpdate) {
+			this.afterUpdate(currLang, lang);
+		}
+		
+		// Check for cookie support
+		if ($.cookie) {
+			// Set a cookie to remember this language setting with 1 year expiry
+			$.cookie('langCookie', lang, {
+				expires: 365,
+				path: '/'
+			});
 		}
 	};
 
@@ -351,8 +397,12 @@ var Lang = (function () {
 		return '';
 	};
 
-	Lang.prototype.update = function (lang) {
-
+	Lang.prototype.beforeUpdate = function (currentLang, newLang) {
+		$(this).triggerHandler('beforeUpdate', [currentLang, newLang, this.pack[currentLang], this.pack[newLang]]);
+	};
+	
+	Lang.prototype.afterUpdate = function (currentLang, newLang) {
+		$(this).triggerHandler('afterUpdate', [currentLang, newLang, this.pack[currentLang], this.pack[newLang]]);
 	};
 
 	return Lang;

@@ -3,14 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>jQuery Lang JS Module Test Page</title>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+<script src="js/jquery-cookie.js" charset="utf-8" type="text/javascript"></script>
 <script src="js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
 <script src="js/langpack/th.js" charset="utf-8" type="text/javascript"></script>
 <script type="text/javascript">
-	window.lang = new jquery_lang_js();
-	$().ready(function () {
-		window.lang.run();
-	});
+	window.lang = new Lang('en');
 </script>
 <style>
 	body {
@@ -114,20 +112,37 @@
 				</tr>
 				<tr>
 					<td>
+						<textarea placeholder="Anytime" lang="en"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&lt;div lang=&quot;en&quot;&gt;Last Month &lt;b&gt;Moo&lt;/b&gt; Anytime&lt;/div&gt;:<br><BR>
+							<div lang="en">Last Month <b>Moo</b> Anytime</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
 						&lt;input type=&quot;button&quot;&gt;: 
-							<input type="button" value="Search..." lang="en" onclick="api.search();" />
+							<input type="button" value="Search..." lang="en" />
 					</td>
 				</tr>
 				<tr>
 					<td>
 						&lt;button&gt;: 
-							<button type="button" lang="en" onclick="api.search();" />Search...</button>
+							<button type="button" lang="en" />Search...</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&lt;reset&gt;: 
+							<button type="reset" lang="en" />Search...</button>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						Click to test alert text: 
-							<input type="button" value="Alert!" onclick="alert(window.lang.convert('Property Search'));" />
+							<input type="button" value="Alert!" onclick="alert(window.lang.translate('Property Search'));" />
 					</td>
 				</tr>
 			</table>

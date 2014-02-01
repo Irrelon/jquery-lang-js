@@ -1,4 +1,13 @@
-Lang.prototype.lang.th = {
+Lang.prototype.pack.th = {
+	rtl: {
+		enabled: false,
+		onEnableRtl: function () {
+			
+		},
+		onDisableRtl: function () {
+			
+		}
+	},
 	token: {
 		'Property Search':'ค้นหา',
 		'Location':'สถานที่ตั้ง',
