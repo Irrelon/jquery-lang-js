@@ -11,7 +11,6 @@ Lang.prototype.pack.th = {
 	token: {
 		'Property Search':'ค้นหา',
 		'Location':'สถานที่ตั้ง',
-		'Budget':'งบประมาณ',
 		'Min Beds':'จำนวนห้องนอน',
 		'Property Type':'ชนิดที่อยู่อาศัย',
 		'Added In':'ลงประกาศเมื่อ',
@@ -79,6 +78,6 @@ Lang.prototype.pack.th = {
 		'Property Photos':'รูปภาพสถานที่'
 	},
 	regex: [
-		[/My regex/, 'someReplacement']
+		[/Budget/, 'งบประมาณ']
 	]
 };

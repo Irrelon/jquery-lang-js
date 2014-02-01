@@ -39,7 +39,8 @@ var Lang = (function () {
 			appendTo: $.fn.appendTo,
 			prepend: $.fn.prepend,
 			before: $.fn.before,
-			after: $.fn.after
+			after: $.fn.after,
+			html: $.fn.html
 		};
 		
 		// Now override the existing mutation methods with our own
@@ -48,6 +49,7 @@ var Lang = (function () {
 		$.fn.prepend = function () { return self._mutation(this, 'prepend', arguments) };
 		$.fn.before = function () { return self._mutation(this, 'before', arguments) };
 		$.fn.after = function () { return self._mutation(this, 'after', arguments) };
+		$.fn.html = function () { return self._mutation(this, 'html', arguments) };
 		
 		// Set default and current language to the default one
 		// to start with
@@ -118,23 +120,18 @@ var Lang = (function () {
 
 		while (arrCount--) {
 			elem = $(arr[arrCount]);
-
-			if (elem.attr('lang') === this.defaultLang) {
-				this._processElement(elem);
-			}
+			this._processElement(elem);
 		}
 	};
 	
 	Lang.prototype._processElement = function (elem) {
-		if (!elem.data('lang-done')) {
+		// Only store data if the element is set to our default language
+		if (elem.attr('lang') === this.defaultLang) {
 			// Store translatable attributes
 			this._storeAttribs(elem);
 	
 			// Store translatable content
 			this._storeContent(elem);
-			
-			// Store marker to show we've processed this element
-			elem.data('lang-done', true);
 		}
 	};
 
@@ -233,6 +230,8 @@ var Lang = (function () {
 					if (translation) {
 						// Replace the text with the translated version
 						textNode.data = textNode.data.split(defaultText).join(translation);
+					} else {
+						console.log('Translation for "' + defaultText + '" not found!');
 					}
 				}
 			} else {
@@ -388,6 +387,10 @@ var Lang = (function () {
 				// No token translation was found, test for regex match
 				translation = this._regexMatch(text, lang);
 			}
+			
+			if (!translation) {
+				console.log('Translation for "' + text + '" not found!');
+			}
 
 			return translation || text;
 		} else {
@@ -450,9 +453,17 @@ var Lang = (function () {
 	// Mutation overrides
 	////////////////////////////////////////////////////
 	Lang.prototype._mutation = function (context, method, args) {
-		var result = this._mutationCopies[method].apply(context, args);
+		var result = this._mutationCopies[method].apply(context, args),
+			currLang = this.currentLang,
+			rootElem = $(context);
 		
-		var rootElem = $(context);
+		// Check if the root element is currently set to another language from default
+		this._translateElement(rootElem, this.defaultLang);
+		this.change(this.defaultLang, rootElem);
+		
+		// Calling change above sets the currentLang but this is isolated so
+		// reset it back to what it was before
+		this.currentLang = currLang;
 		
 		// Record data on the default language from the root element
 		this._processElement(rootElem);
