@@ -36,6 +36,7 @@ var Lang = (function () {
 		// translations when new data is added to the page
 		this._mutationCopies = {
 			append: $.fn.append,
+			appendTo: $.fn.appendTo,
 			prepend: $.fn.prepend,
 			before: $.fn.before,
 			after: $.fn.after
@@ -43,6 +44,7 @@ var Lang = (function () {
 		
 		// Now override the existing mutation methods with our own
 		$.fn.append = function () { return self._mutation(this, 'append', arguments) };
+		$.fn.appendTo = function () { return self._mutation(this, 'appendTo', arguments) };
 		$.fn.prepend = function () { return self._mutation(this, 'prepend', arguments) };
 		$.fn.before = function () { return self._mutation(this, 'before', arguments) };
 		$.fn.after = function () { return self._mutation(this, 'after', arguments) };
