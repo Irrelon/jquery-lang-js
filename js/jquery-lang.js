@@ -32,6 +32,9 @@ var Lang = (function () {
 		var self = this,
 			cookieLang;
 		
+		// Enable firing events
+		this._fireEvents = true;
+		
 		// Store existing mutation methods so we can auto-run
 		// translations when new data is added to the page
 		this._mutationCopies = {
@@ -437,16 +440,22 @@ var Lang = (function () {
 	};
 
 	Lang.prototype.beforeUpdate = function (currentLang, newLang) {
-		$(this).triggerHandler('beforeUpdate', [currentLang, newLang, this.pack[currentLang], this.pack[newLang]]);
+		if (this._fireEvents) {
+			$(this).triggerHandler('beforeUpdate', [currentLang, newLang, this.pack[currentLang], this.pack[newLang]]);
+		}
 	};
 	
 	Lang.prototype.afterUpdate = function (currentLang, newLang) {
-		$(this).triggerHandler('afterUpdate', [currentLang, newLang, this.pack[currentLang], this.pack[newLang]]);
+		if (this._fireEvents) {
+			$(this).triggerHandler('afterUpdate', [currentLang, newLang, this.pack[currentLang], this.pack[newLang]]);
+		}
 	};
 	
 	Lang.prototype.refresh = function () {
 		// Process refresh on the page
+		this._fireEvents = false;
 		this.change(this.currentLang);
+		this._fireEvents = true;
 	};
 	
 	////////////////////////////////////////////////////
@@ -458,6 +467,9 @@ var Lang = (function () {
 			rootElem = $(context);
 		
 		if (rootElem.attr('lang')) {
+			// Switch off events for the moment
+			this._fireEvents = false;
+			
 			// Check if the root element is currently set to another language from default
 			this._translateElement(rootElem, this.defaultLang);
 			this.change(this.defaultLang, rootElem);
@@ -478,6 +490,9 @@ var Lang = (function () {
 		
 		// Process translation on any child elements of this element
 		this.change(this.currentLang, rootElem);
+		
+		// Switch events back on
+		this._fireEvents = true;
 		
 		return result;
 	};

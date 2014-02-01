@@ -6,6 +6,7 @@ translations from a default language such as English to other languages.
 
 # Changelog
 2014-02-01 - Version 2.2
+* Allow disabling event firing so dynamic elements wont fire update events
 * Allow cookies to override passed current language on constructor if passing true as third arg to new Lang()
 * Fix to allow auto-translate when using jQuery appendTo() method
 * Fix for dynamic translation of root-element text nodes
