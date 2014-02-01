@@ -28,7 +28,7 @@
  Version 2.0.0 - Complete re-write.
  */
 var Lang = (function () {
-	var Lang = function (defaultLang, currentLang) {
+	var Lang = function (defaultLang, currentLang, allowCookieOverride) {
 		var self = this,
 			cookieLang;
 		
@@ -53,7 +53,7 @@ var Lang = (function () {
 		this.currentLang = defaultLang || 'en';
 		
 		// Check for cookie support when no current language is specified
-		if (!currentLang && $.cookie) {
+		if ((allowCookieOverride || !currentLang) && $.cookie) {
 			// Check for an existing language cookie
 			cookieLang = $.cookie('langCookie');
 			

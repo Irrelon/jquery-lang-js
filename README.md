@@ -5,6 +5,9 @@ This jQuery plugin allows you to create multiple language versions of your conte
 translations from a default language such as English to other languages.
 
 # Changelog
+2014-02-01 - Version 2.2
+* Allow cookies to override passed current language on constructor if passing true as third arg to new Lang()
+
 2014-02-01 - Version 2.1
 * Fixed break in jQuery chaining
 * Added cookies for persistence when $.cookie exists
