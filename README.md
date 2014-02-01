@@ -5,12 +5,14 @@ This jQuery plugin allows you to create multiple language versions of your conte
 translations from a default language such as English to other languages.
 
 # Changelog
-2014-02-01 - Version 2.0
-* Complete plugin re-write
+2014-02-01 - Version 2.1
 * Added cookies for persistence when $.cookie exists
 * Supports automatic translation for dynamically added content (when added via jQuery)
 * Added support for regular expression matches
 * Added support for translating text nodes mixed with html nodes
+
+2014-01-31 - Version 2.0
+* Complete plugin re-write
 
 # How to use
 
