@@ -119,6 +119,12 @@ var Lang = (function () {
 		}
 	};
 
+	/**
+	 * Reads the existing content from the element and stores it for
+	 * later use in translation.
+	 * @param elem
+	 * @private
+	 */
 	Lang.prototype._storeContent = function (elem) {
 		// Check if the element is an input element
 		if (elem.is('input')) {
@@ -130,10 +136,67 @@ var Lang = (function () {
 					break;
 			}
 		} else {
-			elem.data('lang-html', elem.html());
+			// Get the text nodes immediately inside this element
+			var nodes = this._getTextNodes(elem);
+			if (nodes) {
+				elem.data('lang-text', nodes);
+			}
 		}
 	};
 
+	/**
+	 * Retrieves the text nodes from an element and returns them.
+	 * @param elem
+	 * @returns {Array|*}
+	 * @private
+	 */
+	Lang.prototype._getTextNodes = function (elem) {
+		var nodes = elem.contents(),
+			nodeArr;
+		
+		nodeArr = nodes.filter(function () {
+			this.langDefaultText = this.data;
+			return this.nodeType === 3;
+		});
+		
+		return nodeArr;
+	};
+
+	/**
+	 * Sets text nodes of an element translated based on the passed language.
+	 * @param elem
+	 * @param nodes
+	 * @param lang
+	 * @private
+	 */
+	Lang.prototype._setTextNodes = function (elem, nodes, lang) {
+		var index,
+			textNode,
+			defaultText,
+			translation;
+		
+		for (index = 0; index < nodes.length; index++) {
+			textNode = nodes[index];
+			defaultText = $.trim(textNode.langDefaultText);
+			
+			if (defaultText) {
+				// Translate the langDefaultText
+				translation = this.translate(defaultText, lang);
+				
+				if (translation) {
+					// Replace the text with the translated version
+					textNode.data = translation;
+				}
+			}
+		}
+	};
+
+	/**
+	 * Translates and sets the attributes of an element to the passed language.
+	 * @param elem
+	 * @param lang
+	 * @private
+	 */
 	Lang.prototype._translateAttribs = function (elem, lang) {
 		var attr,
 			attrObj = elem.data('lang-attr') || {},
@@ -161,9 +224,16 @@ var Lang = (function () {
 		}
 	};
 
+	/**
+	 * Translates and sets the contents of an element to the passed language.
+	 * @param elem
+	 * @param lang
+	 * @private
+	 */
 	Lang.prototype._translateContent = function (elem, lang) {
 		var langNotDefault = lang !== this.defaultLang,
-			translation;
+			translation,
+			nodes;
 
 		// Check if the element is an input element
 		if (elem.is('input')) {
@@ -187,22 +257,16 @@ var Lang = (function () {
 					break;
 			}
 		} else {
-			if (langNotDefault) {
-				// Get the translated value
-				translation = this.translate(elem.data('lang-html'), lang);
-
-				// Check we actually HAVE a translation
-				if (translation) {
-					// Set translated value
-					elem.html(translation);
-				}
-			} else {
-				// Set default language value
-				elem.html(elem.data('lang-html'));
-			}
+			// Set text node translated text
+			nodes = elem.data('lang-text');
+			this._setTextNodes(elem, nodes, lang);
 		}
 	};
 
+	/**
+	 * Call this to change the current language on the page.
+	 * @param {String} lang The new two-letter language code to change to.
+	 */
 	Lang.prototype.change = function (lang) {
 		//console.log('Changing language to ' + lang);
 		if (this.currentLang != lang) { this.update(lang); }
@@ -229,6 +293,12 @@ var Lang = (function () {
 		}
 	};
 
+	/**
+	 * Translates text from the default language into the passed language.
+	 * @param {String} text The text to translate.
+	 * @param {String} lang The two-letter language code to translate to.
+	 * @returns {*}
+	 */
 	Lang.prototype.translate = function (text, lang) {
 		lang = lang || this.currentLang;
 
@@ -240,7 +310,7 @@ var Lang = (function () {
 
 			if (!translation) {
 				// No token translation was found, test for regex match
-				translation = this._regexMatch(lang, text);
+				translation = this._regexMatch(text, lang);
 			}
 
 			return translation || text;
@@ -249,7 +319,15 @@ var Lang = (function () {
 		}
 	};
 
-	Lang.prototype._regexMatch = function (lang, text) {
+	/**
+	 * Checks the regex items for a match against the passed text and
+	 * if a match is made, translates to the given replacement.
+	 * @param {String} text The text to test regex matches against.
+	 * @param {String} lang The two-letter language code to translate to.
+	 * @returns {string}
+	 * @private
+	 */
+	Lang.prototype._regexMatch = function (text, lang) {
 		// Loop the regex array and test them against the text
 		var arr = this.pack[lang].regex,
 			arrCount = arr.length,
@@ -271,7 +349,7 @@ var Lang = (function () {
 		}
 
 		return '';
-	}
+	};
 
 	Lang.prototype.update = function (lang) {
 
