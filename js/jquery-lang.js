@@ -457,22 +457,24 @@ var Lang = (function () {
 			currLang = this.currentLang,
 			rootElem = $(context);
 		
-		// Check if the root element is currently set to another language from default
-		this._translateElement(rootElem, this.defaultLang);
-		this.change(this.defaultLang, rootElem);
-		
-		// Calling change above sets the currentLang but this is isolated so
-		// reset it back to what it was before
-		this.currentLang = currLang;
-		
-		// Record data on the default language from the root element
-		this._processElement(rootElem);
+		if (rootElem.attr('lang')) {
+			// Check if the root element is currently set to another language from default
+			this._translateElement(rootElem, this.defaultLang);
+			this.change(this.defaultLang, rootElem);
+			
+			// Calling change above sets the currentLang but this is isolated so
+			// reset it back to what it was before
+			this.currentLang = currLang;
+			
+			// Record data on the default language from the root element
+			this._processElement(rootElem);
+			
+			// Translate the root element
+			this._translateElement(rootElem, this.currentLang);
+		}
 		
 		// Record data on the default language from the root's children
 		this._start(rootElem);
-		
-		// Translate the root element
-		this._translateElement(rootElem, this.currentLang);
 		
 		// Process translation on any child elements of this element
 		this.change(this.currentLang, rootElem);
