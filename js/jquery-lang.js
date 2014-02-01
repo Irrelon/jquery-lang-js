@@ -323,40 +323,44 @@ var Lang = (function () {
 	 * @param {String} lang The new two-letter language code to change to.
 	 */
 	Lang.prototype.change = function (lang, selector) {
-		var fireAfterUpdate = false,
-			currLang = this.currentLang;
-		
-		if (this.currentLang != lang) {
-			this.beforeUpdate(currLang, lang);
-			fireAfterUpdate = true;
-		}
-		
-		this.currentLang = lang;
-		
-		// Get the page HTML
-		var arr = selector !== undefined ? $(selector).find('[lang]') : $(':not(html)[lang]'),
-			arrCount = arr.length,
-			elem;
-
-		while (arrCount--) {
-			elem = $(arr[arrCount]);
-
-			if (elem.attr('lang') !== lang) {
-				this._translateElement(elem, lang);
+		if (lang === this.defaultLang || this.pack[lang]) {
+			var fireAfterUpdate = false,
+				currLang = this.currentLang;
+			
+			if (this.currentLang != lang) {
+				this.beforeUpdate(currLang, lang);
+				fireAfterUpdate = true;
 			}
-		}
-		
-		if (fireAfterUpdate) {
-			this.afterUpdate(currLang, lang);
-		}
-		
-		// Check for cookie support
-		if ($.cookie) {
-			// Set a cookie to remember this language setting with 1 year expiry
-			$.cookie('langCookie', lang, {
-				expires: 365,
-				path: '/'
-			});
+			
+			this.currentLang = lang;
+			
+			// Get the page HTML
+			var arr = selector !== undefined ? $(selector).find('[lang]') : $(':not(html)[lang]'),
+				arrCount = arr.length,
+				elem;
+	
+			while (arrCount--) {
+				elem = $(arr[arrCount]);
+	
+				if (elem.attr('lang') !== lang) {
+					this._translateElement(elem, lang);
+				}
+			}
+			
+			if (fireAfterUpdate) {
+				this.afterUpdate(currLang, lang);
+			}
+			
+			// Check for cookie support
+			if ($.cookie) {
+				// Set a cookie to remember this language setting with 1 year expiry
+				$.cookie('langCookie', lang, {
+					expires: 365,
+					path: '/'
+				});
+			}
+		} else {
+			console.log('Attempt to change language to "' + lang + '" but no language pack for that language is loaded!');
 		}
 	};
 	
@@ -379,23 +383,27 @@ var Lang = (function () {
 	 */
 	Lang.prototype.translate = function (text, lang) {
 		lang = lang || this.currentLang;
-
-		var translation = '';
-
-		if (lang != this.defaultLang) {
-			// Check for a direct token translation
-			translation = this.pack[lang].token[text];
-
-			if (!translation) {
-				// No token translation was found, test for regex match
-				translation = this._regexMatch(text, lang);
+		
+		if (this.pack[lang]) {
+			var translation = '';
+	
+			if (lang != this.defaultLang) {
+				// Check for a direct token translation
+				translation = this.pack[lang].token[text];
+	
+				if (!translation) {
+					// No token translation was found, test for regex match
+					translation = this._regexMatch(text, lang);
+				}
+				
+				if (!translation) {
+					console.log('Translation for "' + text + '" not found!');
+				}
+	
+				return translation || text;
+			} else {
+				return text;
 			}
-			
-			if (!translation) {
-				console.log('Translation for "' + text + '" not found!');
-			}
-
-			return translation || text;
 		} else {
 			return text;
 		}
