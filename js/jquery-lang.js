@@ -42,10 +42,10 @@ var Lang = (function () {
 		};
 		
 		// Now override the existing mutation methods with our own
-		$.fn.append = function () { self._mutation(this, 'append', arguments) };
-		$.fn.prepend = function () { self._mutation(this, 'prepend', arguments) };
-		$.fn.before = function () { self._mutation(this, 'before', arguments) };
-		$.fn.after = function () { self._mutation(this, 'after', arguments) };
+		$.fn.append = function () { return self._mutation(this, 'append', arguments) };
+		$.fn.prepend = function () { return self._mutation(this, 'prepend', arguments) };
+		$.fn.before = function () { return self._mutation(this, 'before', arguments) };
+		$.fn.after = function () { return self._mutation(this, 'after', arguments) };
 		
 		// Set default and current language to the default one
 		// to start with
@@ -448,7 +448,7 @@ var Lang = (function () {
 	// Mutation overrides
 	////////////////////////////////////////////////////
 	Lang.prototype._mutation = function (context, method, args) {
-		this._mutationCopies[method].apply(context, args);
+		var result = this._mutationCopies[method].apply(context, args);
 		
 		var rootElem = $(context);
 		
@@ -463,6 +463,8 @@ var Lang = (function () {
 		
 		// Process translation on any child elements of this element
 		this.change(this.currentLang, rootElem);
+		
+		return result;
 	};
 
 	return Lang;

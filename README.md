@@ -6,6 +6,7 @@ translations from a default language such as English to other languages.
 
 # Changelog
 2014-02-01 - Version 2.1
+* Fixed break in jQuery chaining
 * Added cookies for persistence when $.cookie exists
 * Supports automatic translation for dynamically added content (when added via jQuery)
 * Added support for regular expression matches
