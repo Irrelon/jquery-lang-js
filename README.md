@@ -97,7 +97,7 @@ The onclick event is the only part that matters, you can apply the onclick to an
 
 Language packs are defined in JS files and are added to the plugin like so:
 
-    jquery_lang_js.prototype.lang.th = {
+    Lang.prototype.pack.th = {
     	// Define token (exact phrase) replacements here
     	token: {
 			'Property Search':'ค้นหา',
