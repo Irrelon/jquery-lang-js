@@ -144,8 +144,6 @@ Engine for the Modern Web and was made available by:
 
 Irrelon Software Limited
 
-http://www.orbzu.com
-
-http://www.irrelon.com
-
-http://www.isogenicengine.com
+* http://www.orbzu.com
+* http://www.irrelon.com
+* http://www.isogenicengine.com
