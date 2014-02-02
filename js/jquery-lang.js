@@ -232,7 +232,7 @@ var Lang = (function () {
 					
 					if (translation) {
 						// Replace the text with the translated version
-						textNode.data = textNode.data.split(defaultText).join(translation);
+						textNode.data = textNode.data.split($.trim(textNode.data)).join(translation);
 					} else {
 						console.log('Translation for "' + defaultText + '" not found!');
 					}

@@ -5,6 +5,9 @@ This jQuery plugin allows you to create multiple language versions of your conte
 translations from a default language such as English to other languages.
 
 # Changelog
+2014-02-02 - Version 2.3
+* Fixed bug when switching from non-default language to other non-default language
+
 2014-02-01 - Version 2.2
 * Check that a language pack actually exists before trying to switch to it
 * Allow disabling event firing so dynamic elements wont fire update events
