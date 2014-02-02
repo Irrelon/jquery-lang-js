@@ -140,6 +140,10 @@ code file jquery-lang.js for the full license details.
 If you like this project, please consider Flattr-ing it! http://bit.ly/qCEbTC
 
 This project is part of the Isogenic Game Engine, an HTML5 MMO Real-time Multiplayer 2D & Isometric Canvas Game
-Engine for the Modern Web.
+Engine for the Modern Web and was made available by:
 
+Irrelon Software Limited
+
+http://www.orbzu.com
+http://www.irrelon.com
 http://www.isogenicengine.com
