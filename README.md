@@ -18,6 +18,9 @@ Load http://www.orbzu.com and click the flag top-left of the screen. Select a di
 ## Who Made This?
 This plugin and all relateed code was created by Irrelon Software Limited, a U.K. registered company with a mission to create awesome web applications and push the boundries of app development. Check us out at http://www.irrelon.com
 
+#### LinkedIn
+http://uk.linkedin.com/pub/rob-evans/25/b94/8a5/
+
 # Changelog
 2014-02-02 - Version 2.3
 * Fixed bug when switching from non-default language to other non-default language
