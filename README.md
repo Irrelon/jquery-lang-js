@@ -9,7 +9,7 @@ Load http://www.orbzu.com and click the flag top-left of the screen. Select a di
 
 ## Features
 * Instant language switching - page no reload required
-* Automatic translation of dynamic sections of the page (e.g. loaded via AJAX or added via JavaScript)
+* Automatic translation of dynamic sections of the page (e.g. loaded via AJAX or added via jQuery)
 * Language persistence across pages and reloads via cookie (requires jquery-cookie.js plugin)
 * Supports regular expression search / replace for non-token-based translations
 * Event hooks for custom processing
