@@ -7,6 +7,16 @@ translations from a default language such as English to other languages.
 ## Example
 Load http://www.orbzu.com and click the flag top-left of the screen. Select a different language to see the page change languages automatically.
 
+## Features
+* Instant language switching - page no reload required
+* Automatic translation of dynamic sections of the page (e.g. loaded via AJAX or added via JavaScript)
+* Language persistence across pages and reloads via cookie (requires jquery-cookie.js plugin)
+* Supports regular expression search / replace for non-token-based translations
+* Event hooks for custom processing
+ 
+## Who Made This?
+This plugin and all relateed code was created by Irrelon Software Limited, a U.K. registered company with a mission to create awesome web applications and push the boundries of app development. Check us out at http://www.irrelon.com
+
 # Changelog
 2014-02-02 - Version 2.3
 * Fixed bug when switching from non-default language to other non-default language
@@ -146,7 +156,4 @@ This project is part of the Isogenic Game Engine, an HTML5 MMO Real-time Multipl
 Engine for the Modern Web and was made available by:
 
 Irrelon Software Limited
-
-* http://www.orbzu.com
-* http://www.irrelon.com
-* http://www.isogenicengine.com
+http://www.irrelon.com
