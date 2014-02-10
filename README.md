@@ -13,7 +13,7 @@ Load http://www.orbzu.com and click the flag top-left of the screen. Select a di
 * Language persistence across pages and reloads via cookie (requires jquery-cookie.js plugin)
 * Supports regular expression search / replace for non-token-based translations
 * Event hooks for custom processing
-* No intervals or timeouts, just high-performace code
+* No intervals or timeouts, just high-performance code
  
 ## Who Made This?
 This plugin and all relateed code was created by Irrelon Software Limited, a U.K. registered company with a mission to create awesome web applications and push the boundries of app development. Check us out at http://www.irrelon.com
