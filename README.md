@@ -5,7 +5,7 @@ This jQuery plugin allows you to create multiple language versions of your conte
 translations from a default language such as English to other languages.
 
 ## Example
-Load http://www.orbzu.com and click the flag top-left of the screen. Select a different language to see the page change languages automatically.
+Load https://www.orbzu.com and click the flag top-left of the screen. Select a different language to see the page change languages automatically.
 
 ## Features
 * Instant language switching - page no reload required
