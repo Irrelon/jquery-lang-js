@@ -106,7 +106,7 @@ you add it to the DOM.
 To switch languages simply call the .change() method, passing the two-letter language code to switch to. For
 instance here is a switcher that will change between English and Thai as used in the example page:
 
-    <a href="#lang-en" onclick="window.lang.change('en');">Switch to English</a> | <a href="#lang-en" onclick="window.lang.change('th');">Switch to Thai</a>
+    <a href="#lang-en" onclick="window.lang.change('en'); return false;">Switch to English</a> | <a href="#lang-en" onclick="window.lang.change('th'); return false;">Switch to Thai</a>
 
 The onclick event is the only part that matters, you can apply the onclick to any element you prefer.
 
