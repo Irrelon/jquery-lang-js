@@ -122,16 +122,15 @@ var Lang = (function () {
 		var self = this;
 		
 		if (lang && self._dynamic[lang]) {
-			$('<script type="text/javascript" charset="utf-8" src="' + self._dynamic[lang] + '" />')
-				.on('load', function () {
+			$.getScript(self._dynamic[lang])
+				.done(function () {
 					console.log('Loaded language pack: ' + self._dynamic[lang]);
 					if (callback) { callback(false, lang, self._dynamic[lang]); }
 				})
-				.on('error', function () {
+				.fail(function () {
 					console.log('Error loading language pack' + self._dynamic[lang]);
 					if (callback) { callback(true, lang, self._dynamic[lang]); }
-				})
-				.appendTo("head");
+				});
 		} else {
 			throw('Cannot load language pack, no file path specified!');
 		}
@@ -371,7 +370,7 @@ var Lang = (function () {
 					this.loadPack(lang, function (err, loadingLang, fromUrl) {
 						if (!err) {
 							// Process the change language request
-							self.change.apply(self, arguments);
+							self.change.call(self, lang, selector, callback);
 						} else {
 							// Call the callback with the error
 							if (callback) { callback('Language pack could not load from: ' + fromUrl, lang, selector); }
