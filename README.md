@@ -148,6 +148,12 @@ that any changes you make are:
 
 Thank you to everyone who takes their time to write updates to the plugin!
 
+# Roadmap
+
+* Dynamic language pack loading
+* Swap image assets based on language
+* Swap video assets based on language
+
 # License
 
 This plugin and all code contained is Copyright 2014 Irrelon Software Limited. You are granted a license to use
@@ -156,8 +162,7 @@ code file jquery-lang.js for the full license details.
 
 If you like this project, please consider Flattr-ing it! http://bit.ly/qCEbTC
 
-This project is part of the Isogenic Game Engine, an HTML5 MMO Real-time Multiplayer 2D & Isometric Canvas Game
-Engine for the Modern Web and was made available by:
+This project is updated and maintained by:
 
 Irrelon Software Limited
 http://www.irrelon.com
