@@ -114,16 +114,22 @@ var Lang = (function () {
 	};
 
 	/**
-	 * Loads a new language pack from the given url.
-	 * @param {string} packPath The url to load the pack from.
+	 * Loads a new language pack for the given language.
+	 * @param {string} lang The language to load the pack for.
 	 * @param {Function=} callback Optional callback when the file has loaded.
 	 */
-	Lang.prototype.loadPack = function (packPath, callback) {
-		if (packPath) {
-			$('<script type="text/javascript" charset="utf-8" src="' + packPath + '" />')
+	Lang.prototype.loadPack = function (lang, callback) {
+		var self = this;
+		
+		if (lang && self._dynamic[lang]) {
+			$('<script type="text/javascript" charset="utf-8" src="' + self._dynamic[lang] + '" />')
 				.on('load', function () {
-					console.log('Loaded language pack: ' + packPath);
-					if (callback) { callback(packPath); }
+					console.log('Loaded language pack: ' + self._dynamic[lang]);
+					if (callback) { callback(false, lang, self._dynamic[lang]); }
+				})
+				.on('error', function () {
+					console.log('Error loading language pack' + self._dynamic[lang]);
+					if (callback) { callback(true, lang, self._dynamic[lang]); }
 				})
 				.appendTo("head");
 		} else {
@@ -362,10 +368,21 @@ var Lang = (function () {
 				if (!this.pack[lang] && this._dynamic[lang]) {
 					// The language pack needs loading first
 					console.log('Loading dynamic language pack: ' + this._dynamic[lang] + '...');
-					this.loadPack(this._dynamic[lang], function () {
-						// Process the change language request
-						self.change.apply(self, arguments);
+					this.loadPack(lang, function (err, loadingLang, fromUrl) {
+						if (!err) {
+							// Process the change language request
+							self.change.apply(self, arguments);
+						} else {
+							// Call the callback with the error
+							if (callback) { callback('Language pack could not load from: ' + fromUrl, lang, selector); }
+						}
 					});
+					
+					return;
+				} else if (!this.pack[lang] && !this._dynamic[lang]) {
+					// Pack not loaded and no dynamic entry
+					console.log('Could not change language to ' + lang + ' because no language pack for this language exists!');
+					if (callback) { callback('Language pack not defined for: ' + lang, lang, selector); }
 				}
 			}
 			
@@ -408,7 +425,7 @@ var Lang = (function () {
 			if (callback) { callback(false, lang, selector); }
 		} else {
 			console.log('Attempt to change language to "' + lang + '" but no language pack for that language is loaded!');
-			if (callback) { callback(true, lang, selector); }
+			if (callback) { callback('No language pack defined for: ' + lang, lang, selector); }
 		}
 	};
 	

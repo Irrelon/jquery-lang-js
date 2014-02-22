@@ -136,6 +136,46 @@ are only evaluated IF a token-based replacement is not found for a section of te
 
 It's that simple!
 
+# Loading Language Packs Dynamically
+Instead of loading all the language packs your site provides up front, it can be useful to only load the packs when the
+user requests a language be changed. The plugin allows you to simply define the packs and their paths and then it will
+handle loading them on demand. To define a language pack to load dynamically call the lang.dynamic() method after the
+plugin has loaded and been instantiated:
+
+	<script src="js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
+	<script type="text/javascript">
+		// Create language switcher instance and set default language to en
+		window.lang = new Lang('en');
+		
+		// Define the thai language pack as a dynamic pack to be loaded on demand
+		// if the user asks to change to that language. We pass the two-letter language
+		// code and the path to the language pack js file
+		window.lang.dynamic('th', 'js/langpack/th.js');
+    </script>
+
+### Using Dynamic Packs
+When you call lang.change('th'), the plugin will check if the language pack is already loaded and if not, will load
+the pack first before changing languages. Once the pack file has been loaded the plugin will change to that language.
+
+Loading languages dynamically is only done when the the change() method is called. This means if you request a
+translation of a string via the translate() method BEFORE the language pack for that language is loaded the translation
+will fail.
+
+If you require a language pack to be loaded and don't want to change the page language you can request loading the pack
+manually by calling the loadPack() method like so:
+
+	lang.loadPack('th');
+
+If you need to know when the pack has been loaded pass a callback method:
+
+	lang.loadPack('th', function (err) {
+		if (!err) {
+			// The language pack loaded
+		} else {
+			// There was an error loading the pack
+		}
+	});
+
 # Upgrades and Pull Requests
 
 We actively encourage you to upgrade this plugin and provide pull requests to share your awesome work! Please ensure
@@ -150,7 +190,7 @@ Thank you to everyone who takes their time to write updates to the plugin!
 
 # Roadmap
 
-* Dynamic language pack loading
+* **COMPLETED** - Dynamic language pack loading
 * Swap image assets based on language
 * Swap video assets based on language
 
