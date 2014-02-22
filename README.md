@@ -22,6 +22,9 @@ This plugin and all relateed code was created by Irrelon Software Limited, a U.K
 http://uk.linkedin.com/pub/rob-evans/25/b94/8a5/
 
 # Changelog
+2014-02-22 - Version 2.4
+* Added dynamic loading of language packs so they don't need to be loaded up front, saving on HTTP requests and memory usage
+
 2014-02-02 - Version 2.3
 * Fixed bug when switching from non-default language to other non-default language
 
