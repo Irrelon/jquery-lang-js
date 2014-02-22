@@ -35,6 +35,9 @@ var Lang = (function () {
 		// Enable firing events
 		this._fireEvents = true;
 		
+		// Allow storage of dynamic language pack data
+		this._dynamic = {};
+		
 		// Store existing mutation methods so we can auto-run
 		// translations when new data is added to the page
 		this._mutationCopies = {
@@ -99,12 +102,30 @@ var Lang = (function () {
 	];
 
 	/**
+	 * Defines a language pack that can be dynamically loaded and the
+	 * path to use when doing so.
+	 * @param {String} lang The language two-letter iso-code.
+	 * @param {String} path The path to the language pack js file.
+	 */
+	Lang.prototype.dynamic = function (lang, path) {
+		if (lang !== undefined && path !== undefined) {
+			this._dynamic[lang] = path;
+		}
+	};
+
+	/**
 	 * Loads a new language pack from the given url.
 	 * @param {string} packPath The url to load the pack from.
+	 * @param {Function=} callback Optional callback when the file has loaded.
 	 */
-	Lang.prototype.loadPack = function (packPath) {
+	Lang.prototype.loadPack = function (packPath, callback) {
 		if (packPath) {
-			$('<script type="text/javascript" charset="utf-8" src="' + packPath + '" />').appendTo("head");
+			$('<script type="text/javascript" charset="utf-8" src="' + packPath + '" />')
+				.on('load', function () {
+					console.log('Loaded language pack: ' + packPath);
+					if (callback) { callback(packPath); }
+				})
+				.appendTo("head");
 		} else {
 			throw('Cannot load language pack, no file path specified!');
 		}
@@ -321,9 +342,33 @@ var Lang = (function () {
 	/**
 	 * Call this to change the current language on the page.
 	 * @param {String} lang The new two-letter language code to change to.
+	 * @param {String=} selector Optional selector to find language-based
+	 * elements for updating.
+	 * @param {Function=} callback Optional callback function that will be
+	 * called once the language change has been successfully processed. This
+	 * is especially useful if you are using dynamic language pack loading
+	 * since you will get a callback once it has been loaded and changed.
+	 * Your callback will be passed three arguments, a boolean to denote if
+	 * there was an error (true if error), the second will be the language
+	 * you passed in the change call (the lang argument) and the third will
+	 * be the selector used in the change update.
 	 */
-	Lang.prototype.change = function (lang, selector) {
-		if (lang === this.defaultLang || this.pack[lang]) {
+	Lang.prototype.change = function (lang, selector, callback) {
+		var self = this;
+		
+		if (lang === this.defaultLang || this.pack[lang] || this._dynamic[lang]) {
+			// Check if the language pack is currently loaded
+			if (lang !== this.defaultLang) {
+				if (!this.pack[lang] && this._dynamic[lang]) {
+					// The language pack needs loading first
+					console.log('Loading dynamic language pack: ' + this._dynamic[lang] + '...');
+					this.loadPack(this._dynamic[lang], function () {
+						// Process the change language request
+						self.change.apply(self, arguments);
+					});
+				}
+			}
+			
 			var fireAfterUpdate = false,
 				currLang = this.currentLang;
 			
@@ -359,8 +404,11 @@ var Lang = (function () {
 					path: '/'
 				});
 			}
+			
+			if (callback) { callback(false, lang, selector); }
 		} else {
 			console.log('Attempt to change language to "' + lang + '" but no language pack for that language is loaded!');
+			if (callback) { callback(true, lang, selector); }
 		}
 	};
 	
