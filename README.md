@@ -50,11 +50,9 @@ http://uk.linkedin.com/pub/rob-evans/25/b94/8a5/
 *If you want language selection to persist across pages automatically, please ensure you include the
 jquery-cookie plugin available from: https://github.com/carhartl/jquery-cookie on your page as well.*
 
-Include the plugin script in your head tag and include any language pack you have created ensuring that
-you specify the charset attribute as utf-8. All language pack files should be saved as utf-8 encoded:
+Include the plugin script in your head tag.
 
     <script src="js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
-    <script src="js/langpack/th.js" charset="utf-8" type="text/javascript"></script>
 
 Add the following to your HTML page in either the head or body:
 
@@ -62,6 +60,29 @@ Add the following to your HTML page in either the head or body:
     // Create language switcher instance and set default language to en
 	window.lang = new Lang('en');
     </script>
+
+# Loading Language Packs Dynamically (Recommended)
+Instead of loading all the language packs your site provides up front, it can be useful to only load the packs when the
+user requests a language be changed. The plugin allows you to simply define the packs and their paths and then it will
+handle loading them on demand. To define a language pack to load dynamically call the lang.dynamic() method after the
+plugin has loaded and been instantiated:
+
+	<script src="js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
+	<script type="text/javascript">
+		// Create language switcher instance and set default language to en
+		window.lang = new Lang('en');
+		
+		// Define the thai language pack as a dynamic pack to be loaded on demand
+		// if the user asks to change to that language. We pass the two-letter language
+		// code and the path to the language pack js file
+		window.lang.dynamic('th', 'js/langpack/th.js');
+    </script>
+
+## Including Language Packs Up-Front (Optional)
+*The recommended way to use language packs is to define them dynamically (see Loading Language Packs Dynamically above)*
+You can include any language pack you have created up-front so they are ready to use straight away on your page.
+
+	<script src="js/langpack/th.js" charset="utf-8" type="text/javascript"></script>
 
 # Defining which elements to translate
 
@@ -138,23 +159,6 @@ The regex section allows you to specify regular expressions to use for matching 
 are only evaluated IF a token-based replacement is not found for a section of text.
 
 It's that simple!
-
-# Loading Language Packs Dynamically
-Instead of loading all the language packs your site provides up front, it can be useful to only load the packs when the
-user requests a language be changed. The plugin allows you to simply define the packs and their paths and then it will
-handle loading them on demand. To define a language pack to load dynamically call the lang.dynamic() method after the
-plugin has loaded and been instantiated:
-
-	<script src="js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
-	<script type="text/javascript">
-		// Create language switcher instance and set default language to en
-		window.lang = new Lang('en');
-		
-		// Define the thai language pack as a dynamic pack to be loaded on demand
-		// if the user asks to change to that language. We pass the two-letter language
-		// code and the path to the language pack js file
-		window.lang.dynamic('th', 'js/langpack/th.js');
-    </script>
 
 ### Using Dynamic Packs
 When you call lang.change('th'), the plugin will check if the language pack is already loaded and if not, will load
