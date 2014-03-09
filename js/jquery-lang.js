@@ -257,15 +257,23 @@ var Lang = (function () {
 					translation = this.translate(defaultText, lang);
 					
 					if (translation) {
-						// Replace the text with the translated version
-						textNode.data = textNode.data.split($.trim(textNode.data)).join(translation);
+						try {
+							// Replace the text with the translated version
+							textNode.data = textNode.data.split($.trim(textNode.data)).join(translation);
+						} catch (e) {
+							
+						}
 					} else {
 						console.log('Translation for "' + defaultText + '" not found!');
 					}
 				}
 			} else {
 				// Replace with original text
-				textNode.data = textNode.langDefaultText;
+				try {
+					textNode.data = textNode.langDefaultText;
+				} catch (e) {
+					
+				}
 			}
 		}
 	};
@@ -433,7 +441,9 @@ var Lang = (function () {
 		this._translateAttribs(elem, lang);
 
 		// Translate content
-		this._translateContent(elem, lang);
+		if (elem.attr('data-lang-content') != 'false') {
+			this._translateContent(elem, lang);
+		}
 
 		// Update the element's current language
 		elem.attr('lang', lang);
@@ -461,7 +471,7 @@ var Lang = (function () {
 				}
 				
 				if (!translation) {
-					console.log('Translation for "' + text + '" not found!');
+					console.log('Translation for "' + text + '" not found in language pack: ' + lang);
 				}
 	
 				return translation || text;
@@ -542,19 +552,21 @@ var Lang = (function () {
 			// Switch off events for the moment
 			this._fireEvents = false;
 			
-			// Check if the root element is currently set to another language from default
-			this._translateElement(rootElem, this.defaultLang);
-			this.change(this.defaultLang, rootElem);
-			
-			// Calling change above sets the currentLang but this is isolated so
-			// reset it back to what it was before
-			this.currentLang = currLang;
-			
-			// Record data on the default language from the root element
-			this._processElement(rootElem);
-			
-			// Translate the root element
-			this._translateElement(rootElem, this.currentLang);
+			// Check if the root element is currently set to another language from current
+			//if (rootElem.attr('lang') !== this.currentLang) {
+				this._translateElement(rootElem, this.defaultLang);
+				this.change(this.defaultLang, rootElem);
+				
+				// Calling change above sets the global currentLang but this is supposed to be
+				// an isolated change so reset the global value back to what it was before
+				this.currentLang = currLang;
+				
+				// Record data on the default language from the root element
+				this._processElement(rootElem);
+				
+				// Translate the root element
+				this._translateElement(rootElem, this.currentLang);
+			//}
 		}
 		
 		// Record data on the default language from the root's children
