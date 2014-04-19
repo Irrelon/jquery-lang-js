@@ -22,6 +22,9 @@ This plugin and all relateed code was created by Irrelon Software Limited, a U.K
 http://uk.linkedin.com/pub/rob-evans/25/b94/8a5/
 
 # Changelog
+2014-04-19 - Version 2.5
+* Changed dynamically loaded language packs to JSON format. This allows the packs to be loaded by other programming languages such as PHP that can natively interpret JSON but not JavaScript.
+
 2014-02-22 - Version 2.4
 * Added dynamic loading of language packs so they don't need to be loaded up front, saving on HTTP requests and memory usage
 
@@ -70,14 +73,17 @@ plugin has loaded and been instantiated:
 	// Define the thai language pack as a dynamic pack to be loaded on demand
 	// if the user asks to change to that language. We pass the two-letter language
 	// code and the path to the language pack js file
-	window.lang.dynamic('th', 'js/langpack/th.js');
+	window.lang.dynamic('th', 'js/langpack/th.json');
 
 ## Including Language Packs Up-Front (Optional)
 *The recommended way to use language packs is to define them dynamically (see Loading Language Packs Dynamically above)*
 
-You can include any language pack you have created up-front so they are ready to use straight away on your page.
+You can include any language pack you have created up-front so they are ready to use straight away on your page. If you
+do it this way you must make the language pack a JS file and include a line of code to insert the pack into the Lang 
+prototype. See the ./langPack/nonDynamic.js file for an example. Pay attention to the regex section as well as this needs
+to define regex patterns directly instead of as strings.
 
-	<script src="js/langpack/th.js" charset="utf-8" type="text/javascript"></script>
+	<script src="js/langpack/nonDynamic.js" charset="utf-8" type="text/javascript"></script>
 
 # Defining which elements to translate
 
@@ -131,19 +137,19 @@ The onclick event is the only part that matters, you can apply the onclick to an
 
 # Define a language pack
 
-Language packs are defined in JS files and are added to the plugin like so:
+Language packs are defined in JSON files and are added to the plugin like so:
 
-    Lang.prototype.pack.th = {
+    {
     	// Define token (exact phrase) replacements here
-    	token: {
-			'Property Search':'ค้นหา',
-			'Location':'สถานที่ตั้ง',
-			'Budget':'งบประมาณ',
-			'An option phrase to translate':'งบประมาณงบประมาณสถานที่ตั้ง',
+    	"token": {
+			"Property Search":"ค้นหา",
+			"Location":"สถานที่ตั้ง",
+			"Budget":"งบประมาณ",
+			"An option phrase to translate":"งบประมาณงบประมาณสถานที่ตั้ง",
 		},
 		// Define regular expression replacements here
-		regex: [
-			[/My regex/i, 'someReplacement']
+		"regex": [
+			["My regex", "i", "someReplacement"]
 		]
     }
 
