@@ -122,15 +122,41 @@ var Lang = (function () {
 		var self = this;
 		
 		if (lang && self._dynamic[lang]) {
-			$.getScript(self._dynamic[lang])
-				.done(function () {
+			$.ajax({
+				dataType: "json",
+				url: self._dynamic[lang],
+				success: function (data) {
+					self.pack[lang] = data;
+					
+					// Process the regex list
+					if (self.pack[lang].regex) {
+						var packRegex = self.pack[lang].regex,
+							regex,
+							i;
+						
+						for (i = 0; i < packRegex.length; i++) {
+							regex = packRegex[i];
+							if (regex.length === 2) {
+								// String, value
+								regex[0] = new RegExp(regex[0]);
+							} else if (regex.length === 3) {
+								// String, modifiers, value
+								regex[0] = new RegExp(regex[0], regex[1]);
+								
+								// Remove modifier
+								regex.splice(1, 1);
+							}
+						}
+					}
+					
 					console.log('Loaded language pack: ' + self._dynamic[lang]);
 					if (callback) { callback(false, lang, self._dynamic[lang]); }
-				})
-				.fail(function () {
+				},
+				error: function () {
 					console.log('Error loading language pack' + self._dynamic[lang]);
 					if (callback) { callback(true, lang, self._dynamic[lang]); }
-				});
+				}
+			});
 		} else {
 			throw('Cannot load language pack, no file path specified!');
 		}
