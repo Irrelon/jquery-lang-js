@@ -272,7 +272,7 @@ var Lang = (function () {
 	/**
 	 * Sets text nodes of an element translated based on the passed language.
 	 * @param elem
-	 * @param nodes
+	 * @param {Array|*} nodes array of objecs with text node and defaultText returned from _getTextNodes
 	 * @param lang
 	 * @private
 	 */
