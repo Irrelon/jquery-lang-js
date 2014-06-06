@@ -22,6 +22,11 @@ This plugin and all relateed code was created by Irrelon Software Limited, a U.K
 http://uk.linkedin.com/pub/rob-evans/25/b94/8a5/
 
 # Changelog
+2014-06-06 - Version 2.6
+* Changed _getTextNodes & _setTextNodes methods to work under IE8. _getTextNodes returns now array of objects where every object have two properties:
+	- node - current text node
+	- langDefaultText - remember data of current text node 
+
 2014-04-19 - Version 2.5
 * Changed dynamically loaded language packs to JSON format. This allows the packs to be loaded by other programming languages such as PHP that can natively interpret JSON but not JavaScript.
 
