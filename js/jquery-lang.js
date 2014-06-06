@@ -241,21 +241,32 @@ var Lang = (function () {
 	};
 
 	/**
-	 * Retrieves the text nodes from an element and returns them.
+	 * Retrieves the text nodes from an element and returns them in array wrap into
+	 * object with two properties: 
+	 *         - node - which corespondes to text node,
+	 *         - langDefaultText - wich remember current data of text node 
 	 * @param elem
 	 * @returns {Array|*}
 	 * @private
 	 */
 	Lang.prototype._getTextNodes = function (elem) {
-		var nodes = elem.contents(),
-			nodeArr;
-		
-		nodeArr = nodes.filter(function () {
-			this.langDefaultText = this.data;
-			return this.nodeType === 3;
+		var nodes = elem.contents(), nodeObjArray = [], nodeObj = {},
+			nodeArr, that = this, map = Array.prototype.map;
+
+        $.each(nodes, function (index, node) {
+            if ( node.nodeType !== 3 ) {
+                return;
+            }
+
+			nodeObj = {
+				node : node,
+				langDefaultText : node.data
+			};
+
+			nodeObjArray.push(nodeObj);
 		});
 		
-		return nodeArr;
+		return nodeObjArray;
 	};
 
 	/**
@@ -285,7 +296,7 @@ var Lang = (function () {
 					if (translation) {
 						try {
 							// Replace the text with the translated version
-							textNode.data = textNode.data.split($.trim(textNode.data)).join(translation);
+							textNode.node.data = textNode.node.data.split($.trim(textNode.node.data)).join(translation);
 						} catch (e) {
 							
 						}
@@ -296,7 +307,7 @@ var Lang = (function () {
 			} else {
 				// Replace with original text
 				try {
-					textNode.data = textNode.langDefaultText;
+					textNode.node.data = textNode.langDefaultText;
 				} catch (e) {
 					
 				}
