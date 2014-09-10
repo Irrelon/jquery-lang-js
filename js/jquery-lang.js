@@ -31,13 +31,13 @@ var Lang = (function () {
 	var Lang = function (defaultLang, currentLang, allowCookieOverride) {
 		var self = this,
 			cookieLang;
-		
+
 		// Enable firing events
 		this._fireEvents = true;
-		
+
 		// Allow storage of dynamic language pack data
 		this._dynamic = {};
-		
+
 		// Store existing mutation methods so we can auto-run
 		// translations when new data is added to the page
 		this._mutationCopies = {
@@ -48,7 +48,7 @@ var Lang = (function () {
 			after: $.fn.after,
 			html: $.fn.html
 		};
-		
+
 		// Now override the existing mutation methods with our own
 		$.fn.append = function () { return self._mutation(this, 'append', arguments) };
 		$.fn.appendTo = function () { return self._mutation(this, 'appendTo', arguments) };
@@ -56,17 +56,17 @@ var Lang = (function () {
 		$.fn.before = function () { return self._mutation(this, 'before', arguments) };
 		$.fn.after = function () { return self._mutation(this, 'after', arguments) };
 		$.fn.html = function () { return self._mutation(this, 'html', arguments) };
-		
+
 		// Set default and current language to the default one
 		// to start with
 		this.defaultLang = defaultLang || 'en';
 		this.currentLang = defaultLang || 'en';
-		
+
 		// Check for cookie support when no current language is specified
 		if ((allowCookieOverride || !currentLang) && $.cookie) {
 			// Check for an existing language cookie
 			cookieLang = $.cookie('langCookie');
-			
+
 			if (cookieLang) {
 				// We have a cookie language, set the current language
 				currentLang = cookieLang;
@@ -76,7 +76,7 @@ var Lang = (function () {
 		$(function () {
 			// Setup data on the language items
 			self._start();
-	
+
 			// Check if the current language is not the same as our default
 			if (currentLang && currentLang !== self.defaultLang) {
 				// Switch to the current language
@@ -120,20 +120,20 @@ var Lang = (function () {
 	 */
 	Lang.prototype.loadPack = function (lang, callback) {
 		var self = this;
-		
+
 		if (lang && self._dynamic[lang]) {
 			$.ajax({
 				dataType: "json",
 				url: self._dynamic[lang],
 				success: function (data) {
 					self.pack[lang] = data;
-					
+
 					// Process the regex list
 					if (self.pack[lang].regex) {
 						var packRegex = self.pack[lang].regex,
 							regex,
 							i;
-						
+
 						for (i = 0; i < packRegex.length; i++) {
 							regex = packRegex[i];
 							if (regex.length === 2) {
@@ -142,13 +142,13 @@ var Lang = (function () {
 							} else if (regex.length === 3) {
 								// String, modifiers, value
 								regex[0] = new RegExp(regex[0], regex[1]);
-								
+
 								// Remove modifier
 								regex.splice(1, 1);
 							}
 						}
 					}
-					
+
 					console.log('Loaded language pack: ' + self._dynamic[lang]);
 					if (callback) { callback(false, lang, self._dynamic[lang]); }
 				},
@@ -178,13 +178,13 @@ var Lang = (function () {
 			this._processElement(elem);
 		}
 	};
-	
+
 	Lang.prototype._processElement = function (elem) {
 		// Only store data if the element is set to our default language
 		if (elem.attr('lang') === this.defaultLang) {
 			// Store translatable attributes
 			this._storeAttribs(elem);
-	
+
 			// Store translatable content
 			this._storeContent(elem);
 		}
@@ -226,6 +226,7 @@ var Lang = (function () {
 		if (elem.is('input')) {
 			switch (elem.attr('type')) {
 				case 'button':
+				case 'hidden':
 				case 'submit':
 				case 'reset':
 					elem.data('lang-val', elem.val());
@@ -242,9 +243,9 @@ var Lang = (function () {
 
 	/**
 	 * Retrieves the text nodes from an element and returns them in array wrap into
-	 * object with two properties: 
+	 * object with two properties:
 	 *         - node - which corespondes to text node,
-	 *         - langDefaultText - wich remember current data of text node 
+	 *         - langDefaultText - wich remember current data of text node
 	 * @param elem
 	 * @returns {Array|*}
 	 * @private
@@ -265,7 +266,7 @@ var Lang = (function () {
 
 			nodeObjArray.push(nodeObj);
 		});
-		
+
 		return nodeObjArray;
 	};
 
@@ -282,23 +283,23 @@ var Lang = (function () {
 			defaultText,
 			translation,
 			langNotDefault = lang !== this.defaultLang;
-		
+
 		for (index = 0; index < nodes.length; index++) {
 			textNode = nodes[index];
-			
+
 			if (langNotDefault) {
 				defaultText = $.trim(textNode.langDefaultText);
-				
+
 				if (defaultText) {
 					// Translate the langDefaultText
 					translation = this.translate(defaultText, lang);
-					
+
 					if (translation) {
 						try {
 							// Replace the text with the translated version
 							textNode.node.data = textNode.node.data.split($.trim(textNode.node.data)).join(translation);
 						} catch (e) {
-							
+
 						}
 					} else {
 						console.log('Translation for "' + defaultText + '" not found!');
@@ -309,7 +310,7 @@ var Lang = (function () {
 				try {
 					textNode.node.data = textNode.langDefaultText;
 				} catch (e) {
-					
+
 				}
 			}
 		}
@@ -363,6 +364,7 @@ var Lang = (function () {
 		if (elem.is('input')) {
 			switch (elem.attr('type')) {
 				case 'button':
+				case 'hidden':
 				case 'submit':
 				case 'reset':
 					if (langNotDefault) {
@@ -405,7 +407,7 @@ var Lang = (function () {
 	 */
 	Lang.prototype.change = function (lang, selector, callback) {
 		var self = this;
-		
+
 		if (lang === this.defaultLang || this.pack[lang] || this._dynamic[lang]) {
 			// Check if the language pack is currently loaded
 			if (lang !== this.defaultLang) {
@@ -421,7 +423,7 @@ var Lang = (function () {
 							if (callback) { callback('Language pack could not load from: ' + fromUrl, lang, selector); }
 						}
 					});
-					
+
 					return;
 				} else if (!this.pack[lang] && !this._dynamic[lang]) {
 					// Pack not loaded and no dynamic entry
@@ -429,34 +431,34 @@ var Lang = (function () {
 					if (callback) { callback('Language pack not defined for: ' + lang, lang, selector); }
 				}
 			}
-			
+
 			var fireAfterUpdate = false,
 				currLang = this.currentLang;
-			
+
 			if (this.currentLang != lang) {
 				this.beforeUpdate(currLang, lang);
 				fireAfterUpdate = true;
 			}
-			
+
 			this.currentLang = lang;
-			
+
 			// Get the page HTML
 			var arr = selector !== undefined ? $(selector).find('[lang]') : $(':not(html)[lang]'),
 				arrCount = arr.length,
 				elem;
-	
+
 			while (arrCount--) {
 				elem = $(arr[arrCount]);
-	
+
 				if (elem.attr('lang') !== lang) {
 					this._translateElement(elem, lang);
 				}
 			}
-			
+
 			if (fireAfterUpdate) {
 				this.afterUpdate(currLang, lang);
 			}
-			
+
 			// Check for cookie support
 			if ($.cookie) {
 				// Set a cookie to remember this language setting with 1 year expiry
@@ -465,14 +467,14 @@ var Lang = (function () {
 					path: '/'
 				});
 			}
-			
+
 			if (callback) { callback(false, lang, selector); }
 		} else {
 			console.log('Attempt to change language to "' + lang + '" but no language pack for that language is loaded!');
 			if (callback) { callback('No language pack defined for: ' + lang, lang, selector); }
 		}
 	};
-	
+
 	Lang.prototype._translateElement = function (elem, lang) {
 		// Translate attributes
 		this._translateAttribs(elem, lang);
@@ -494,23 +496,23 @@ var Lang = (function () {
 	 */
 	Lang.prototype.translate = function (text, lang) {
 		lang = lang || this.currentLang;
-		
+
 		if (this.pack[lang]) {
 			var translation = '';
-	
+
 			if (lang != this.defaultLang) {
 				// Check for a direct token translation
 				translation = this.pack[lang].token[text];
-	
+
 				if (!translation) {
 					// No token translation was found, test for regex match
 					translation = this._regexMatch(text, lang);
 				}
-				
+
 				if (!translation) {
 					console.log('Translation for "' + text + '" not found in language pack: ' + lang);
 				}
-	
+
 				return translation || text;
 			} else {
 				return text;
@@ -536,19 +538,19 @@ var Lang = (function () {
 			item,
 			regex,
 			expressionResult;
-		
+
 		arr = this.pack[lang].regex;
-		
+
 		if (arr) {
 			arrCount = arr.length;
-			
+
 			for (arrIndex = 0; arrIndex < arrCount; arrIndex++) {
 				item = arr[arrIndex];
 				regex = item[0];
-	
+
 				// Test regex
 				expressionResult = regex.exec(text);
-	
+
 				if (expressionResult && expressionResult[0]) {
 					return text.split(expressionResult[0]).join(item[1]);
 				}
@@ -563,20 +565,20 @@ var Lang = (function () {
 			$(this).triggerHandler('beforeUpdate', [currentLang, newLang, this.pack[currentLang], this.pack[newLang]]);
 		}
 	};
-	
+
 	Lang.prototype.afterUpdate = function (currentLang, newLang) {
 		if (this._fireEvents) {
 			$(this).triggerHandler('afterUpdate', [currentLang, newLang, this.pack[currentLang], this.pack[newLang]]);
 		}
 	};
-	
+
 	Lang.prototype.refresh = function () {
 		// Process refresh on the page
 		this._fireEvents = false;
 		this.change(this.currentLang);
 		this._fireEvents = true;
 	};
-	
+
 	////////////////////////////////////////////////////
 	// Mutation overrides
 	////////////////////////////////////////////////////
@@ -584,37 +586,37 @@ var Lang = (function () {
 		var result = this._mutationCopies[method].apply(context, args),
 			currLang = this.currentLang,
 			rootElem = $(context);
-		
+
 		if (rootElem.attr('lang')) {
 			// Switch off events for the moment
 			this._fireEvents = false;
-			
+
 			// Check if the root element is currently set to another language from current
 			//if (rootElem.attr('lang') !== this.currentLang) {
 				this._translateElement(rootElem, this.defaultLang);
 				this.change(this.defaultLang, rootElem);
-				
+
 				// Calling change above sets the global currentLang but this is supposed to be
 				// an isolated change so reset the global value back to what it was before
 				this.currentLang = currLang;
-				
+
 				// Record data on the default language from the root element
 				this._processElement(rootElem);
-				
+
 				// Translate the root element
 				this._translateElement(rootElem, this.currentLang);
 			//}
 		}
-		
+
 		// Record data on the default language from the root's children
 		this._start(rootElem);
-		
+
 		// Process translation on any child elements of this element
 		this.change(this.currentLang, rootElem);
-		
+
 		// Switch events back on
 		this._fireEvents = true;
-		
+
 		return result;
 	};
 
