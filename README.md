@@ -22,6 +22,9 @@ This plugin and all relateed code was created by Irrelon Software Limited, a U.K
 http://uk.linkedin.com/pub/rob-evans/25/b94/8a5/
 
 # Changelog
+2015-01-07 - Version 2.7
+* Removed console.log() calls so that old versions of Internet Explorer won't break
+
 2014-06-06 - Version 2.6
 * Changed _getTextNodes & _setTextNodes methods to work under IE8. _getTextNodes returns now array of objects where every object have two properties:
 	- node - current text node
