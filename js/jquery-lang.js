@@ -149,12 +149,12 @@ var Lang = (function () {
 						}
 					}
 					
-					console.log('Loaded language pack: ' + self._dynamic[lang]);
+					//console.log('Loaded language pack: ' + self._dynamic[lang]);
 					if (callback) { callback(false, lang, self._dynamic[lang]); }
 				},
 				error: function () {
-					console.log('Error loading language pack' + self._dynamic[lang]);
 					if (callback) { callback(true, lang, self._dynamic[lang]); }
+					throw('Error loading language pack' + self._dynamic[lang]);
 				}
 			});
 		} else {
@@ -301,7 +301,9 @@ var Lang = (function () {
 							
 						}
 					} else {
-						console.log('Translation for "' + defaultText + '" not found!');
+						if (console && console.log) {
+							console.log('Translation for "' + defaultText + '" not found!');
+						}
 					}
 				}
 			} else {
@@ -411,7 +413,7 @@ var Lang = (function () {
 			if (lang !== this.defaultLang) {
 				if (!this.pack[lang] && this._dynamic[lang]) {
 					// The language pack needs loading first
-					console.log('Loading dynamic language pack: ' + this._dynamic[lang] + '...');
+					//console.log('Loading dynamic language pack: ' + this._dynamic[lang] + '...');
 					this.loadPack(lang, function (err, loadingLang, fromUrl) {
 						if (!err) {
 							// Process the change language request
@@ -425,8 +427,8 @@ var Lang = (function () {
 					return;
 				} else if (!this.pack[lang] && !this._dynamic[lang]) {
 					// Pack not loaded and no dynamic entry
-					console.log('Could not change language to ' + lang + ' because no language pack for this language exists!');
 					if (callback) { callback('Language pack not defined for: ' + lang, lang, selector); }
+					throw('Could not change language to ' + lang + ' because no language pack for this language exists!');
 				}
 			}
 			
@@ -468,8 +470,8 @@ var Lang = (function () {
 			
 			if (callback) { callback(false, lang, selector); }
 		} else {
-			console.log('Attempt to change language to "' + lang + '" but no language pack for that language is loaded!');
 			if (callback) { callback('No language pack defined for: ' + lang, lang, selector); }
+			throw('Attempt to change language to "' + lang + '" but no language pack for that language is loaded!');
 		}
 	};
 	
@@ -508,7 +510,9 @@ var Lang = (function () {
 				}
 				
 				if (!translation) {
-					console.log('Translation for "' + text + '" not found in language pack: ' + lang);
+					if (console && console.log) {
+						console.log('Translation for "' + text + '" not found in language pack: ' + lang);
+					}
 				}
 	
 				return translation || text;
