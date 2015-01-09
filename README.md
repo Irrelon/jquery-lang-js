@@ -12,6 +12,7 @@ Load https://www.orbzu.com and click the flag top-left of the screen. Select a d
 * Automatic translation of dynamic sections of the page (e.g. loaded via AJAX or added via jQuery)
 * Language persistence across pages and reloads via cookie (requires jquery-cookie.js plugin)
 * Supports regular expression search / replace for non-token-based translations
+* Supports changing image urls when language changes
 * Event hooks for custom processing
 * No intervals or timeouts, just high-performance code
  
@@ -22,6 +23,9 @@ This plugin and all relateed code was created by Irrelon Software Limited, a U.K
 http://uk.linkedin.com/pub/rob-evans/25/b94/8a5/
 
 # Changelog
+2015-01-09 - Version 2.8
+* Added support for changing images when the language changes
+
 2015-01-07 - Version 2.7
 * Removed console.log() calls so that old versions of Internet Explorer won't break
 

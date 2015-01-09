@@ -66,7 +66,8 @@
 		"Property Description":"รายละเอียดของประกาศ",
 		"Synopsis":"รายละเอียดย่อในประกาศ",
 		"Full Description":"รายละเอียดเพิ่มเติมสำหรับผู้สนใจประกาศ",
-		"Property Photos":"รูปภาพสถานที่"
+		"Property Photos":"รูปภาพสถานที่",
+	  	"http://www.ioling.org/images/flags/uk.gif": "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_Thailand.svg/1280px-Flag_of_Thailand.svg.png"
 	},
 	"regex": [
 		["Budget", "งบประมาณ"],

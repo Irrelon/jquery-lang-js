@@ -230,6 +230,8 @@ var Lang = (function () {
 					elem.data('lang-val', elem.val());
 					break;
 			}
+		} else if (elem.is('img')) {
+			elem.data('lang-src', elem.attr('src'));
 		} else {
 			// Get the text nodes immediately inside this element
 			var nodes = this._getTextNodes(elem);
@@ -380,6 +382,20 @@ var Lang = (function () {
 						elem.val(elem.data('lang-val'));
 					}
 					break;
+			}
+		} else if (elem.is('img')) {
+			if (langNotDefault) {
+				// Get the translated value
+				translation = this.translate(elem.data('lang-src'), lang);
+
+				// Check we actually HAVE a translation
+				if (translation) {
+					// Set translated value
+					elem.attr('src', translation);
+				}
+			} else {
+				// Set default language value
+				elem.attr('src', elem.data('lang-src'));
 			}
 		} else {
 			// Set text node translated text
