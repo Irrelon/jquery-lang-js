@@ -226,6 +226,7 @@ var Lang = (function () {
 			switch (elem.attr('type')) {
 				case 'button':
 				case 'submit':
+				case 'hidden':
 				case 'reset':
 					elem.data('lang-val', elem.val());
 					break;
@@ -367,6 +368,7 @@ var Lang = (function () {
 			switch (elem.attr('type')) {
 				case 'button':
 				case 'submit':
+				case 'hidden':
 				case 'reset':
 					if (langNotDefault) {
 						// Get the translated value
