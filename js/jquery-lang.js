@@ -22,10 +22,9 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 
- Source: https://github.com/coolbloke1324/jquery-lang-js
+ Source: https://github.com/irrelon/jquery-lang-js
 
- Changelog:
- Version 2.0.0 - Complete re-write.
+ Changelog: See readme.md
  */
 var Lang = (function () {
 	var Lang = function (defaultLang, currentLang, allowCookieOverride) {
@@ -82,7 +81,7 @@ var Lang = (function () {
 				// Switch to the current language
 				self.change(currentLang);
 			}
-		})
+		});
 	};
 
 	/**
@@ -243,8 +242,8 @@ var Lang = (function () {
 	/**
 	 * Retrieves the text nodes from an element and returns them in array wrap into
 	 * object with two properties: 
-	 *         - node - which corespondes to text node,
-	 *         - langDefaultText - wich remember current data of text node 
+	 * 	- node - which corresponds to text node,
+	 * 	- langDefaultText - which remember current data of text node
 	 * @param elem
 	 * @returns {Array|*}
 	 * @private
