@@ -214,7 +214,7 @@ Thank you to everyone who takes their time to write updates to the plugin!
 # Roadmap
 
 * **COMPLETED** - Dynamic language pack loading
-* Swap image assets based on language
+* **COMPLETED** - Swap image assets based on language
 * Swap video assets based on language
 
 # License
