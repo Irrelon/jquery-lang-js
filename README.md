@@ -207,7 +207,6 @@ that any changes you make are:
 1. Non-breaking changes
 2. Tested thoroughly against the latest version
 3. Documented with the JSDoc standard as the other methods are
-4. Update the changelog at the top of this file with your updates
 
 Thank you to everyone who takes their time to write updates to the plugin!
 
