@@ -199,6 +199,18 @@ If you need to know when the pack has been loaded pass a callback method:
 		}
 	});
 
+# Translating Custom Element Attributes
+The plugin maintains a list of attributes that will automatically translate and you can specify your own custom attributes too. The attributes that are translated by default are:
+
+* title
+* alt
+* placeholder
+* href
+
+You can specify custom attributes that will be translated by adding them to the attrList property of the lang-js instance. For example to auto-translate an attribute called 'data-name' you would add this after lang-js has been included on your page:
+
+	Lang.prototype.attrList.push('data-name');
+
 # Upgrades and Pull Requests
 
 We actively encourage you to upgrade this plugin and provide pull requests to share your awesome work! Please ensure
