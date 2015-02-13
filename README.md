@@ -211,6 +211,9 @@ You can specify custom attributes that will be translated by adding them to the 
 
 	Lang.prototype.attrList.push('data-name');
 
+# Bugs, Issues, Questions, Contact and Feature Requests
+Please post using the GitHub issues system on this repository.
+
 # Upgrades and Pull Requests
 
 We actively encourage you to upgrade this plugin and provide pull requests to share your awesome work! Please ensure
