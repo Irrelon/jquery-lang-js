@@ -5,7 +5,7 @@ This jQuery plugin allows you to create multiple language versions of your conte
 translations from a default language such as English to other languages.
 
 ### Used By Big Names
-![EasyJet](http://www.irrelon.com/assets/logo_easyjet.png)
+![EasyJet](http://www.irrelon.com/assets/logo_easyjet2.png)
 ![ETR](http://www.irrelon.com/assets/logo_etr.png)
 ![Schrader](http://www.irrelon.com/assets/logo_schrader.png)
 ![Mindscape](http://www.irrelon.com/assets/logo_mindscape.jpg)
