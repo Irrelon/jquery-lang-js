@@ -4,9 +4,6 @@
 This jQuery plugin allows you to create multiple language versions of your content by supplying phrase
 translations from a default language such as English to other languages.
 
-## Live Production-Ready Example
-Load https://www.orbzu.com and click the flag top-left of the screen. Select a different language to see the page change languages automatically.
-
 ## Features
 * Instant language switching - page no reload required
 * Automatic translation of dynamic sections of the page (e.g. loaded via AJAX or added via jQuery)
