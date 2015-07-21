@@ -8,7 +8,7 @@ translations from a default language such as English to other languages.
 ![Logos](http://www.irrelon.com/assets/logos_lang.png)
 
 ## Features
-* Instant language switching - page no reload required
+* Instant language switching - no page reload required
 * Automatic translation of dynamic sections of the page (e.g. loaded via AJAX or added via jQuery)
 * Language persistence across pages and reloads via cookie (requires jquery-cookie.js plugin)
 * Supports regular expression search / replace for non-token-based translations
