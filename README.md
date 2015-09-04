@@ -22,9 +22,6 @@ This plugin and all related code was created by Irrelon Software Limited, a U.K.
 #### LinkedIn
 http://uk.linkedin.com/pub/rob-evans/25/b94/8a5/
 
-#### French Translation of Code
-https://github.com/emgepub/jquery-lang-js
-
 # Changelog
 2015-01-09 - Version 2.8
 * Added support for changing images when the language changes
