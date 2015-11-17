@@ -10,7 +10,7 @@ translations from a default language such as English to other languages.
 ## Features
 * Instant language switching - no page reload required
 * Automatic translation of dynamic sections of the page (e.g. loaded via AJAX or added via jQuery)
-* Language persistence across pages and reloads via cookie (requires jquery-cookie.js plugin)
+* Language persistence across pages and reloads via cookie (requires js-cookie.js plugin)
 * Supports regular expression search / replace for non-token-based translations
 * Supports changing image urls when language changes
 * Event hooks for custom processing
@@ -63,7 +63,7 @@ http://uk.linkedin.com/pub/rob-evans/25/b94/8a5/
 # How to use
 
 *If you want language selection to persist across pages automatically, please ensure you include the
-jquery-cookie plugin available from: https://github.com/carhartl/jquery-cookie on your page as well.*
+js-cookie plugin available from: https://github.com/js-cookie/js-cookie on your page as well.*
 
 Include the plugin script in your head tag.
 
