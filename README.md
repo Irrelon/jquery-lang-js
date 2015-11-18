@@ -23,6 +23,9 @@ This plugin and all related code was created by Irrelon Software Limited, a U.K.
 http://uk.linkedin.com/pub/rob-evans/25/b94/8a5/
 
 # Changelog
+2015-11-18 - Version 2.8.1
+* Added package.json as per #52
+
 2015-01-09 - Version 2.8
 * Added support for changing images when the language changes
 
