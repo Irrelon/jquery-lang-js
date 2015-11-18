@@ -75,8 +75,10 @@ Include the plugin script in your head tag.
 Add the following to your HTML page in either the head or body:
 
     <script type="text/javascript">
-    // Create language switcher instance and set default language to en
-	window.lang = new Lang('en');
+    // Create language switcher instance and set cookie token and default language to en
+	window.lang = new Lang('langCookie','en');
+	// Set cookie expiry and path
+	lang.cookie(365, '/');
     </script>
 
 # Loading Language Packs Dynamically (Recommended)
