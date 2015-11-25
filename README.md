@@ -76,7 +76,7 @@ Add the following to your HTML page in either the head or body:
 
     <script type="text/javascript">
     // Create language switcher instance and set cookie token and default language to en
-	window.lang = new Lang('langCookie','en');
+	var lang = new Lang('langCookie','en');
 	// Set cookie expiry and path
 	lang.cookie(365, '/');
     </script>
