@@ -27,7 +27,7 @@
  Changelog: See readme.md
  */
 var Lang = (function () {
-	var Lang = function (defaultLang, currentLang, allowCookieOverride) {
+	var Lang = function (cookieToken, defaultLang, currentLang, allowCookieOverride) {
 		var self = this,
 			cookieLang;
 		
@@ -61,10 +61,13 @@ var Lang = (function () {
 		this.defaultLang = defaultLang || 'en';
 		this.currentLang = defaultLang || 'en';
 		
+		// Set default cookie token if not set by user
+		this.cookieToken = cookieToken || 'langCookie';
+
 		// Check for cookie support when no current language is specified
 		if ((allowCookieOverride || !currentLang) && Cookies) {
 			// Check for an existing language cookie
-			cookieLang = Cookies.get('langCookie');
+			cookieLang = Cookies.get(self.cookieToken);
 			
 			if (cookieLang) {
 				// We have a cookie language, set the current language
@@ -84,6 +87,16 @@ var Lang = (function () {
 		});
 	};
 
+	/**
+	 * Defines cookie exiry and path. Set default values if not set by user
+	 * @param {Integer} expiry The number of days to expire the cookie.
+	 * @param {String} path The path for the cookie.
+	 */
+	Lang.prototype.cookie = function (expiry, path) {
+		this.cookieExpiry = expiry ? expiry : 365;
+		this.cookiePath = path ? path : '/';
+	};
+	
 	/**
 	 * Object that holds the language packs.
 	 * @type {{}}
@@ -480,9 +493,9 @@ var Lang = (function () {
 			// Check for cookie support
 			if (Cookies) {
 				// Set a cookie to remember this language setting with 1 year expiry
-				Cookies.set('langCookie', lang, {
-					expires: 365,
-					path: '/'
+				Cookies.set(this.cookieToken, lang, {
+					expires: this.cookieExpiry,
+					path: this.cookiePath
 				});
 			}
 			
