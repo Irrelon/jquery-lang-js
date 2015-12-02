@@ -141,6 +141,9 @@ lang.init({
 ```
 
 # Loading Language Packs Dynamically (Recommended)
+> **PLEASE NOTE** You MUST declare your dynamic language packs BEFORE calling
+the init() method.
+
 Instead of loading all the language packs your site provides up front, it can be useful to only load the packs when the
 user requests a language be changed. The plugin allows you to simply define the packs and their paths and then it will
 handle loading them on demand. To define a language pack to load dynamically call the lang.dynamic() method after the
@@ -149,7 +152,17 @@ plugin has loaded and been instantiated:
 	// Define the thai language pack as a dynamic pack to be loaded on demand
 	// if the user asks to change to that language. We pass the two-letter language
 	// code and the path to the language pack js file
-	window.lang.dynamic('th', 'js/langpack/th.json');
+	lang.dynamic('th', 'js/langpack/th.json');
+
+Example:
+
+	var lang = new Lang();
+	
+	lang.dynamic('th', 'js/langpack/th.json');
+	
+	lang.init({
+		defaultLang: 'en'
+	});
 
 ## Including Language Packs Up-Front (Optional)
 *The recommended way to use language packs is to define them dynamically (see Loading Language Packs Dynamically above)*
