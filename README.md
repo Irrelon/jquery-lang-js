@@ -142,7 +142,10 @@ lang.init({
 
 # Loading Language Packs Dynamically (Recommended)
 > **PLEASE NOTE** You MUST declare your dynamic language packs BEFORE calling
-the init() method.
+the init() method. Declaring your pack via the dynamic() method does not load
+your pack from the server, it just tells the library WHERE the pack is so that
+when the language is switched to the one the pack handles, the pack is then
+requested from the server.
 
 Instead of loading all the language packs your site provides up front, it can be useful to only load the packs when the
 user requests a language be changed. The plugin allows you to simply define the packs and their paths and then it will
