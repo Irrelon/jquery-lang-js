@@ -27,16 +27,38 @@
  Changelog: See readme.md
  */
 var Lang = (function () {
-	var Lang = function (defaultLang, currentLang, allowCookieOverride) {
-		var self = this,
-			cookieLang;
-		
+	var Lang = function () {
 		// Enable firing events
 		this._fireEvents = true;
-		
+
 		// Allow storage of dynamic language pack data
 		this._dynamic = {};
-		
+	};
+
+	/**
+	 * Initialise the library with the library options.
+	 * @param {Object} options The options to init the library with.
+	 * See the readme.md for the details of the options available.
+	 */
+	Lang.prototype.init = function (options) {
+		var self = this,
+			cookieLang,
+			defaultLang,
+			currentLang,
+			allowCookieOverride;
+
+		options = options || {};
+		options.cookie = options.cookie || {};
+
+		defaultLang = options.defaultLang;
+		currentLang = options.currentLang;
+		allowCookieOverride = options.allowCookieOverride;
+
+		// Set cookie settings
+		this.cookieName = options.cookie.name || 'langCookie';
+		this.cookieExpiry = options.cookie.expiry || 365;
+		this.cookiePath = options.cookie.path || '/';
+
 		// Store existing mutation methods so we can auto-run
 		// translations when new data is added to the page
 		this._mutationCopies = {
@@ -47,7 +69,7 @@ var Lang = (function () {
 			after: $.fn.after,
 			html: $.fn.html
 		};
-		
+
 		// Now override the existing mutation methods with our own
 		$.fn.append = function () { return self._mutation(this, 'append', arguments) };
 		$.fn.appendTo = function () { return self._mutation(this, 'appendTo', arguments) };
@@ -55,17 +77,17 @@ var Lang = (function () {
 		$.fn.before = function () { return self._mutation(this, 'before', arguments) };
 		$.fn.after = function () { return self._mutation(this, 'after', arguments) };
 		$.fn.html = function () { return self._mutation(this, 'html', arguments) };
-		
+
 		// Set default and current language to the default one
 		// to start with
 		this.defaultLang = defaultLang || 'en';
 		this.currentLang = defaultLang || 'en';
-		
+
 		// Check for cookie support when no current language is specified
 		if ((allowCookieOverride || !currentLang) && Cookies) {
 			// Check for an existing language cookie
-			cookieLang = Cookies.get('langCookie');
-			
+			cookieLang = Cookies.get(this.cookieName);
+
 			if (cookieLang) {
 				// We have a cookie language, set the current language
 				currentLang = cookieLang;
@@ -75,7 +97,7 @@ var Lang = (function () {
 		$(function () {
 			// Setup data on the language items
 			self._start();
-	
+
 			// Check if the current language is not the same as our default
 			if (currentLang && currentLang !== self.defaultLang) {
 				// Switch to the current language
@@ -480,9 +502,9 @@ var Lang = (function () {
 			// Check for cookie support
 			if (Cookies) {
 				// Set a cookie to remember this language setting with 1 year expiry
-				Cookies.set('langCookie', lang, {
-					expires: 365,
-					path: '/'
+				Cookies.set(self.cookieName, lang, {
+					expires: self.cookieExpiry,
+					path: self.cookiePath
 				});
 			}
 			
