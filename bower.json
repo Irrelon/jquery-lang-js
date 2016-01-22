@@ -1,0 +1,27 @@
+{
+  "name": "jquery-lang-js",
+  "version": "3.0.0",
+  "homepage": "https://github.com/irrelon/jquery-lang-js",
+  "authors": [
+    "Rob Evans <rob@irrelon.com>"
+  ],
+  "description": "i18n Automatically deploy and switch multi-language HTML pages without reloading the page.",
+  "main": "js/jquery-lang.js",
+  "keywords": [
+    "jquery",
+    "lang",
+    "localization",
+    "i18n",
+    "language",
+    "automatic",
+    "translation"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
