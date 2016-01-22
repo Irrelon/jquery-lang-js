@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>jQuery Lang JS Module Test Page</title>
+    <!--<script src="js/langpack/nonDynamic.js" charset="utf-8" type="text/javascript"></script>-->
+    <script data-main="js/jquery-lang" src="bower_components/requirejs/require.js"></script>
+    <script type="text/javascript">
+        requirejs.config({
+            baseUrl: './js/',
+            paths: {
+                jquery: "//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min",
+                Cookies: "./js.cookie",
+                Lang: "./jquery-lang"
+            }
+        });
+        require(['jquery', 'Lang'], function ($, Lang) {
+            var lang = new Lang();
+            lang.dynamic('th', 'js/langpack/th.json');
+            lang.init({
+                defaultLang: 'en'
+            });
+
+            $('#langChanger').on('click', 'a', function (e) {
+                if($(e.currentTarget).is(':first-child')) {
+                    lang.change('en');
+                } else {
+                    lang.change('th');
+                }
+                return false;
+            });
+
+            $('#alert-translate').on('click', function () {
+                alert(lang.translate('Property Search'));
+            });
+
+            $('#dyn-load').on('click', function () {
+                $('#dyn-target').append('Something Budget <span lang=\'en\'>Something Budget</span>');
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 12px;
+        }
+
+        #langChanger {
+            margin-bottom: 10px;
+        }
+
+        .sectionTitle {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<a href="http://flattr.com/thing/352558/jQuery-Multi-Language-Site-Plugin" target="_blank">
+    <img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this"
+         border="0"/></a><BR/><BR/>
+
+<div id="langChanger"><a href="#">Switch to English</a> | <a href="#">Switch to Thai</a></div>
+<div id="testHtml">
+    <div id="searchTitle" class="sectionTitle" lang="en">Property Search</div>
+    <div id="searchForm">
+        <form action="/api/search" method="post" enctype="multipart/form-data">
+            <table>
+                <tr>
+                    <td><span lang="en">Location</span>:</td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="location"/></td>
+                </tr>
+                <tr>
+                    <td>
+                        <hr/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span lang="en">Budget</span> (with placeholder text):</td>
+                </tr>
+                <tr>
+                    <td><input lang="en" type="text" name="budgetFrom" placeholder="Budget"/></td>
+                </tr>
+                <tr>
+                    <td><input lang="en" type="text" name="budgetTo" placeholder="Budget"/></td>
+                </tr>
+                <tr>
+                    <td>
+                        <hr/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span lang="en">Min Beds</span>:</td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="minBeds">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6+">6+</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <hr/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span lang="en">Property Type</span>:</td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="type">
+                            <option value="all" lang="en">Show All</option>
+                            <option value="house" lang="en">House</option>
+                            <option value="townhouse" lang="en">Town House</option>
+                            <option value="apartment" lang="en">Apartment</option>
+                            <option value="condo" lang="en">Condominium</option>
+                            <option value="commercial" lang="en">Commercial</option>
+                            <option value="office" lang="en">Office</option>
+                            <option value="storage" lang="en">Storage</option>
+                            <option value="land" lang="en">Land</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <hr/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span lang="en">Added In</span>:</td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="added">
+                            <option value="anytime" lang="en">Anytime</option>
+                            <option value="24hours" lang="en">Last 24 Hours</option>
+                            <option value="3days" lang="en">Last 3 Days</option>
+                            <option value="week" lang="en">Last Week</option>
+                            <option value="month" lang="en">Last Month</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea placeholder="Anytime" lang="en"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &lt;div lang=&quot;en&quot;&gt;Last Month &lt;b&gt;Moo&lt;/b&gt; Anytime&lt;/div&gt;:<br><BR>
+
+                        <div lang="en">Last Month <b>Moo</b> Anytime</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &lt;input type=&quot;button&quot;&gt;:
+                        <input type="button" value="Search..." lang="en"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &lt;button&gt;:
+                        <button type="button" lang="en"/>
+                        Search...</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &lt;reset&gt;:
+                        <button type="reset" lang="en"/>
+                        Search...</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &lt;img&gt;:
+                        <img lang="en" data-lang-token="FLAG" src="http://www.ioling.org/images/flags/uk.gif"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &lt;a&gt;:
+                        <a lang="en" href="http://www.google.com/">http://www.google.com/</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Click to test alert text:
+                        <input type="button" value="Alert!" id="alert-translate"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Click to test loading dynamic content:
+                        <input type="button" value="Load Dynamic..." id="dyn-load"/>
+                        <div id="dyn-target" lang="en"></div>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+</body>
+</html>
