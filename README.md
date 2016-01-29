@@ -85,7 +85,7 @@ Add the following to your HTML page in either the head or body:
 ```html
 <script type="text/javascript">
 	// Create language switcher instance
-	var Lang = new Lang();
+	var lang = new Lang();
 	
 	lang.init({
 		defaultLang: 'en'
