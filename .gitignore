@@ -193,6 +193,7 @@ $RECYCLE.BIN/
 *.egg
 *.egg-info
 build/
+bower_components/
 eggs/
 parts/
 var/
