@@ -84,9 +84,9 @@ var Lang = (function () {
 		this.currentLang = defaultLang || 'en';
 
 		// Check for cookie support when no current language is specified
-		if ((allowCookieOverride || !currentLang) && Cookies) {
+		if ((allowCookieOverride || !currentLang) && window.Cookies) {
 			// Check for an existing language cookie
-			cookieLang = Cookies.get(this.cookieName);
+			cookieLang = window.Cookies.get(this.cookieName);
 
 			if (cookieLang) {
 				// We have a cookie language, set the current language
@@ -500,9 +500,9 @@ var Lang = (function () {
 			}
 			
 			// Check for cookie support
-			if (Cookies) {
+			if (window.Cookies) {
 				// Set a cookie to remember this language setting with 1 year expiry
-				Cookies.set(self.cookieName, lang, {
+				window.Cookies.set(self.cookieName, lang, {
 					expires: self.cookieExpiry,
 					path: self.cookiePath
 				});
