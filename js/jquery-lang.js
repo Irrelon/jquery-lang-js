@@ -84,7 +84,7 @@ var Lang = (function () {
 		this.currentLang = defaultLang || 'en';
 
 		// Check for cookie support when no current language is specified
-		if ((allowCookieOverride || !currentLang) && Cookies) {
+		if ((allowCookieOverride || !currentLang) && typeof Cookies !== 'undefined') {
 			// Check for an existing language cookie
 			cookieLang = Cookies.get(this.cookieName);
 
