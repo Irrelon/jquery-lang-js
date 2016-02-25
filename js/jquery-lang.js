@@ -293,6 +293,12 @@ var Lang = (function () {
 			nodeObjArray.push(nodeObj);
 		});
 		
+		// If element has only one text node and data-lang-token is defined
+		// set langContentKey property to use as a token
+		if(nodes.length == 1){
+			nodeObjArray[0].langToken = elem.data('langToken');
+		}
+		
 		return nodeObjArray;
 	};
 
@@ -314,7 +320,8 @@ var Lang = (function () {
 			textNode = nodes[index];
 			
 			if (langNotDefault) {
-				defaultText = $.trim(textNode.langDefaultText);
+				// If langToken is set, use it as a token
+				defaultText = textNode.langToken || $.trim(textNode.langDefaultText);
 				
 				if (defaultText) {
 					// Translate the langDefaultText
