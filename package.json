@@ -2,7 +2,7 @@
   "author": "Rob Evans - Irrelon Software Limited",
   "name": "jquery-lang-js",
   "description": "i18n Automatically deploy and switch multi-language HTML pages without reloading the page.",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "keywords": [
     "jquery",
     "lang",

@@ -27,6 +27,8 @@
  Changelog: See readme.md
  */
 var Lang = (function () {
+	"use strict";
+
 	var Lang = function () {
 		// Enable firing events
 		this._fireEvents = true;
@@ -500,7 +502,7 @@ var Lang = (function () {
 			}
 			
 			// Check for cookie support
-			if (Cookies) {
+			if (typeof Cookies !== "undefined") {
 				// Set a cookie to remember this language setting with 1 year expiry
 				Cookies.set(self.cookieName, lang, {
 					expires: self.cookieExpiry,
