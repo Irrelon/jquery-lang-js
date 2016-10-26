@@ -85,7 +85,7 @@ Add the following to your HTML page in either the head or body:
 ```html
 <script type="text/javascript">
 	// Create language switcher instance
-	var Lang = new Lang();
+	var lang = new Lang();
 	
 	lang.init({
 		defaultLang: 'en'
@@ -211,6 +211,22 @@ If you need to know the current translation value of some text in your JavaScrip
 alert() you can use the translate() method:
 
     alert(window.lang.translate('Some text to translate'));
+
+# Translating long text with a custom defined token
+
+If you do not want to create translation files with long tokens, you can specify custom tokens for elements which contain long text.
+
+To define a custom token, add a data-lang-token attribute to the element.
+```html
+<div lang="en" data-lang-token="lorem">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in ...</div>
+```
+
+To translate the long text
+```json
+"lorem" : "ตรงกันข้ามกับความเชื่อที่นิยมกัน Lorem Ipsum ไม่ได้เป็นเพียงแค่ชุดตัวอักษรที่สุ่มขึ้นมามั่วๆ แต่หากมีที่มาจากวรรณกรรมละตินคลาสสิกชิ้นหนึ่งในยุค  ..."
+```
+
+**Limitation:** Elements with data-lang-token attribute, have to contain only one text node, otherwise the plugin uses text content as a token.
 
 # Dynamic content
 

@@ -68,7 +68,8 @@
 		"Full Description":"รายละเอียดเพิ่มเติมสำหรับผู้สนใจประกาศ",
 		"Property Photos":"รูปภาพสถานที่",
 	  	"http://www.ioling.org/images/flags/uk.gif": "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_Thailand.svg/1280px-Flag_of_Thailand.svg.png",
-		"http://www.google.com/": "http://www.yahoo.com/"
+		"http://www.google.com/": "http://www.yahoo.com/",
+		"lorem" : "ตรงกันข้ามกับความเชื่อที่นิยมกัน Lorem Ipsum ไม่ได้เป็นเพียงแค่ชุดตัวอักษรที่สุ่มขึ้นมามั่วๆ แต่หากมีที่มาจากวรรณกรรมละตินคลาสสิกชิ้นหนึ่งในยุค  ..."
 	},
 	"regex": [
 		["Budget", "งบประมาณ"],

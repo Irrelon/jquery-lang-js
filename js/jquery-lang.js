@@ -111,7 +111,7 @@
         this.currentLang = defaultLang || 'en';
 
         // Check for cookie support when no current language is specified
-        if ((allowCookieOverride || !currentLang) && Cookies) {
+		if ((allowCookieOverride || !currentLang) && typeof Cookies !== 'undefined') {
             // Check for an existing language cookie
             cookieLang = Cookies.get(this.cookieName);
 
@@ -322,6 +322,12 @@
             nodeObjArray.push(nodeObj);
         });
 
+		// If element has only one text node and data-lang-token is defined
+		// set langContentKey property to use as a token
+		if(nodes.length == 1){
+			nodeObjArray[0].langToken = elem.data('langToken');
+		}
+		
         return nodeObjArray;
     };
 
@@ -343,7 +349,8 @@
             textNode = nodes[index];
 
             if (langNotDefault) {
-                defaultText = $.trim(textNode.langDefaultText);
+				// If langToken is set, use it as a token
+				defaultText = textNode.langToken || $.trim(textNode.langDefaultText);
 
                 if (defaultText) {
                     // Translate the langDefaultText
@@ -535,7 +542,7 @@
             }
 
             // Check for cookie support
-            if (Cookies) {
+			if (typeof Cookies !== "undefined") {
                 // Set a cookie to remember this language setting with 1 year expiry
                 Cookies.set(self.cookieName, lang, {
                     expires: self.cookieExpiry,
