@@ -4,9 +4,6 @@
 This jQuery plugin allows you to create multiple language versions of your content by supplying phrase
 translations from a default language such as English to other languages.
 
-### Used By Big Names
-![Logos](http://www.irrelon.com/assets/logos_lang.png)
-
 ## Features
 * Instant language switching - no page reload required
 * Automatic translation of dynamic sections of the page (e.g. loaded via AJAX or added via jQuery)
