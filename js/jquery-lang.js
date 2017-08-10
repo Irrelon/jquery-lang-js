@@ -35,7 +35,7 @@
         module.exports = factory();
     } else {
         var _OldLang = window.Lang;
-        var api = window.Lang = factory(jQuery, Cookies);
+        var api = window.Lang = factory(jQuery, typeof Cookies !== 'undefined' ? Cookies : undefined);
         api.noConflict = function () {
             window.Lang = _OldLang;
             return api;
