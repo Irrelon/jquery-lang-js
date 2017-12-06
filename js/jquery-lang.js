@@ -343,15 +343,15 @@
             textNode,
             defaultText,
             translation,
-			reg,
+	    reg,
             langNotDefault = lang !== this.defaultLang;
 
         for (index = 0; index < nodes.length; index++) {
             textNode = nodes[index];
 
             if (langNotDefault) {
-				// If langToken is set, use it as a token
-				defaultText = textNode.langToken || $.trim(textNode.langDefaultText);
+		// If langToken is set, use it as a token
+		defaultText = textNode.langToken || $.trim(textNode.langDefaultText);
 
                 if (defaultText) {
                     // Translate the langDefaultText
