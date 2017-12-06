@@ -343,7 +343,7 @@
             textNode,
             defaultText,
             translation,
-	    reg,
+            regex,
             langNotDefault = lang !== this.defaultLang;
 
         for (index = 0; index < nodes.length; index++) {
@@ -358,9 +358,9 @@
                     translation = this.translate(defaultText, lang);
 					
 					// if the text containing HTML tag, processing it
-					reg = /<[^>]+>/g;
+					regex = /<[^>]+>/g;
 					
-					if(reg.test(translation)) {
+					if(regex.test(translation)) {
 						elem.context.innerHTML = translation;
 					}else if (translation) {
                         try {
