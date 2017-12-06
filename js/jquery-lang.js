@@ -343,6 +343,7 @@
             textNode,
             defaultText,
             translation,
+			reg,
             langNotDefault = lang !== this.defaultLang;
 
         for (index = 0; index < nodes.length; index++) {
@@ -355,8 +356,13 @@
                 if (defaultText) {
                     // Translate the langDefaultText
                     translation = this.translate(defaultText, lang);
-
-                    if (translation) {
+					
+					// if the text containing HTML tag, processing it
+					reg = /<[^>]+>/g;
+					
+					if(reg.test(translation)) {
+						elem.context.innerHTML = translation;
+					}else if (translation) {
                         try {
                             // Replace the text with the translated version
                             textNode.node.data = textNode.node.data.split($.trim(textNode.node.data)).join(translation);
