@@ -343,20 +343,26 @@
             textNode,
             defaultText,
             translation,
+            regex,
             langNotDefault = lang !== this.defaultLang;
 
         for (index = 0; index < nodes.length; index++) {
             textNode = nodes[index];
 
             if (langNotDefault) {
-				// If langToken is set, use it as a token
-				defaultText = textNode.langToken || $.trim(textNode.langDefaultText);
+		// If langToken is set, use it as a token
+		defaultText = textNode.langToken || $.trim(textNode.langDefaultText);
 
                 if (defaultText) {
                     // Translate the langDefaultText
                     translation = this.translate(defaultText, lang);
-
-                    if (translation) {
+					
+					// if the text containing HTML tag, processing it
+					regex = /<[^>]+>/g;
+					
+					if(regex.test(translation)) {
+						elem.context.innerHTML = translation;
+					}else if (translation) {
                         try {
                             // Replace the text with the translated version
                             textNode.node.data = textNode.node.data.split($.trim(textNode.node.data)).join(translation);
