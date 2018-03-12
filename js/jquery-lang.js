@@ -157,8 +157,10 @@
      * @param {String} path The path to the language pack js file.
      */
     Lang.prototype.dynamic = function (lang, path) {
+	if(!this._dynamic[lang])
+            this._dynamic[lang] = [];
         if (lang !== undefined && path !== undefined) {
-            this._dynamic[lang] = path;
+            this._dynamic[lang].push(path)
         }
     };
 
@@ -170,46 +172,76 @@
     Lang.prototype.loadPack = function (lang, callback) {
         var self = this;
 
-        if (lang && self._dynamic[lang]) {
-            $.ajax({
-                dataType: "json",
-                url: self._dynamic[lang],
-                success: function (data) {
-                    self.pack[lang] = data;
-
-                    // Process the regex list
-                    if (self.pack[lang].regex) {
-                        var packRegex = self.pack[lang].regex,
-                            regex,
-                            i;
-
-                        for (i = 0; i < packRegex.length; i++) {
-                            regex = packRegex[i];
-                            if (regex.length === 2) {
-                                // String, value
-                                regex[0] = new RegExp(regex[0]);
-                            } else if (regex.length === 3) {
-                                // String, modifiers, value
-                                regex[0] = new RegExp(regex[0], regex[1]);
-
-                                // Remove modifier
-                                regex.splice(1, 1);
+        if (lang && !jQuery.isEmptyObject(self._dynamic[lang])) {
+            for(var arrayIndex in self._dynamic[lang]){
+                var langPathURL = self._dynamic[lang][arrayIndex];
+                $.ajax({
+                    dataType: "json",
+        
+                    url: langPathURL,
+                    contentType: "application/javascript;charset=ISO-8859-15",
+                    success: function (data) {
+        
+                        // if the pack[lang] already exists data, merge them
+                        if(typeof (self.pack[lang]) == "undefined" || self.pack[lang] == null){
+                            self.pack[lang] = data;
+                        }else{
+                            var existingData = self.pack[lang];
+                            var existingToken = existingData.token;
+                            var existingRegex = existingData.regex;
+                            if(data.token){
+                                for(var tokenKey in data.token){
+                                    var tokenValue = data.token[tokenKey];
+                                    existingToken[tokenKey] = tokenValue;
+                                }
+                            }
+                            if(data.regex){
+                                for(var regexKey in data.regex){
+                                    var regexValue = data.regex[regexKey];
+                                    existingRegex[regexKey] = regexValue;
+                                }
                             }
                         }
+        
+                        // Process the regex list
+                        if (self.pack[lang].regex) {
+                            var packRegex = self.pack[lang].regex,
+                                regex,
+                                i;
+        
+                            for (i = 0; i < packRegex.length; i++) {
+                                regex = packRegex[i];
+                                if (regex.length === 2) {
+        
+                                    // String, value
+                                    regex[0] = new RegExp(regex[0]);
+                                } else if (regex.length === 3) {
+                                    // String, modifiers, value
+                                    regex[0] = new RegExp(regex[0], regex[1]);
+        
+                                    // Remove modifier
+                                    regex.splice(1, 1);
+                                }
+                            }
+                        }
+        
+                        //console.log('Loaded language pack: ' + langPathURL);
+                        if (callback) {
+                            callback(false, lang, langPathURL);
+                        }
+                    },
+                    error: function ( jqXHR, textStatus, errorThrown ) {
+                        console.dir(jqXHR);
+                        console.dir(textStatus);
+                        console.dir(errorThrown);
+                        if (callback) {
+        
+                            callback(true, lang, langPathURL);
+                        }
+                        throw('Error loading language pack' + langPathURL);
                     }
-
-                    //console.log('Loaded language pack: ' + self._dynamic[lang]);
-                    if (callback) {
-                        callback(false, lang, self._dynamic[lang]);
-                    }
-                },
-                error: function () {
-                    if (callback) {
-                        callback(true, lang, self._dynamic[lang]);
-                    }
-                    throw('Error loading language pack' + self._dynamic[lang]);
-                }
-            });
+                });
+            }
         } else {
             throw('Cannot load language pack, no file path specified!');
         }
@@ -492,10 +524,10 @@
     Lang.prototype.change = function (lang, selector, callback) {
         var self = this;
 
-        if (lang === this.defaultLang || this.pack[lang] || this._dynamic[lang]) {
+        if (lang === this.defaultLang || this.pack[lang] || !jQuery.isEmptyObject(this._dynamic[lang])) {
             // Check if the language pack is currently loaded
             if (lang !== this.defaultLang) {
-                if (!this.pack[lang] && this._dynamic[lang]) {
+                if (!this.pack[lang] && !jQuery.isEmptyObject(this._dynamic[lang])) {
                     // The language pack needs loading first
                     //console.log('Loading dynamic language pack: ' + this._dynamic[lang] + '...');
                     this.loadPack(lang, function (err, loadingLang, fromUrl) {
@@ -511,7 +543,7 @@
                     });
 
                     return;
-                } else if (!this.pack[lang] && !this._dynamic[lang]) {
+                } else if (!this.pack[lang] && !jQuery.isEmptyObject(this._dynamic[lang])) {
                     // Pack not loaded and no dynamic entry
                     if (callback) {
                         callback('Language pack not defined for: ' + lang, lang, selector);
