@@ -73,6 +73,7 @@
         this.cookieName = options.cookie.name || 'langCookie';
         this.cookieExpiry = options.cookie.expiry || 365;
         this.cookiePath = options.cookie.path || '/';
+        this.logMissingTranslations = options.logMissingTranslations || false;
 
         // Store existing mutation methods so we can auto-run
         // translations when new data is added to the page
@@ -370,7 +371,7 @@
 
                         }
                     } else {
-                        if (console && console.log) {
+                        if (console && console.log && this.logMissingTranslations) {
                             console.log('Translation for "' + defaultText + '" not found!');
                         }
                     }
@@ -602,7 +603,7 @@
                 }
 
                 if (!translation) {
-                    if (console && console.log) {
+                    if (console && console.log && this.logMissingTranslations) {
                         console.log('Translation for "' + text + '" not found in language pack: ' + lang);
                     }
                 }
