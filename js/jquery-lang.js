@@ -587,34 +587,42 @@
      * @param {String} lang The two-letter language code to translate to.
      * @returns {*}
      */
-    Lang.prototype.translate = function (text, lang) {
+    Lang.prototype.translate = function (text, replacements, lang) {
+        var result = "";
         lang = lang || this.currentLang;
 
-        if (this.pack[lang]) {
-            var translation = '';
-
-            if (lang != this.defaultLang) {
-                // Check for a direct token translation
-                translation = this.pack[lang].token[text];
-
-                if (!translation) {
-                    // No token translation was found, test for regex match
-                    translation = this._regexMatch(text, lang);
-                }
-
-                if (!translation) {
-                    if (console && console.log && this.logMissingTranslations) {
-                        console.log('Translation for "' + text + '" not found in language pack: ' + lang);
-                    }
-                }
-
-                return translation || text;
-            } else {
-                return text;
-            }
-        } else {
-            return text;
+		if (this.pack[lang]) {
+			var translation = '';
+			if (lang != this.defaultLang) {
+				// Check for a direct token translation
+				
+				if (this.pack[lang].token) {
+					translation = this.pack[lang].token[text];
+				}
+				
+				if (!translation) {
+					// No token translation was found, test for regex match
+					translation = this._regexMatch(text, lang);
+				}
+				
+				if (!translation) {
+					//console.log('Translation for "' + text + '" not found in language pack: ' + lang);
+				}
+				result = translation || text;
+			} else {
+				result = text;
+			}
+		} else {
+			result = text;
         }
+
+		if (replacements && (typeof replacements === 'object')) {
+			replacements.forEach(function(item,index)
+			{
+				result = result.replace('%s',item); 
+			});
+		}
+		return result;
     };
 
     /**
