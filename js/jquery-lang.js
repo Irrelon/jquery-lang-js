@@ -118,7 +118,7 @@
 
             if (cookieLang) {
                 // We have a cookie language, set the current language
-                currentLang = cookieLang;
+                this.currentLang = cookieLang;
             }
         }
 
@@ -356,7 +356,7 @@
 
                 if (defaultText) {
                     // Translate the langDefaultText
-                    translation = this.translate(defaultText, lang);
+                    translation = this.translate(defaultText, null, lang);
 					
 					// if the text containing HTML tag, processing it
 					regex = /<[^>]+>/g;
@@ -404,7 +404,7 @@
                 if (elem.attr(attr)) {
                     if (lang !== this.defaultLang) {
                         // Get the translated value
-                        translation = this.translate(attrObj[attr], lang);
+                        translation = this.translate(attrObj[attr], null, lang);
 
                         // Check we actually HAVE a translation
                         if (translation) {
@@ -440,7 +440,7 @@
                 case 'reset':
                     if (langNotDefault) {
                         // Get the translated value
-                        translation = this.translate(elem.data('lang-val'), lang);
+                        translation = this.translate(elem.data('lang-val'), null, lang);
 
                         // Check we actually HAVE a translation
                         if (translation) {
@@ -456,7 +456,7 @@
         } else if (elem.is('img')) {
             if (langNotDefault) {
                 // Get the translated value
-                translation = this.translate(elem.data('lang-src'), lang);
+                translation = this.translate(elem.data('lang-src'), null, lang);
 
                 // Check we actually HAVE a translation
                 if (translation) {
