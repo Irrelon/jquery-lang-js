@@ -73,6 +73,7 @@
         this.cookieName = options.cookie.name || 'langCookie';
         this.cookieExpiry = options.cookie.expiry || 365;
         this.cookiePath = options.cookie.path || '/';
+        this.logMissingTranslations = options.logMissingTranslations || false;
 
         // Store existing mutation methods so we can auto-run
         // translations when new data is added to the page
@@ -117,7 +118,7 @@
 
             if (cookieLang) {
                 // We have a cookie language, set the current language
-                currentLang = cookieLang;
+                this.currentLang = cookieLang;
             }
         }
 
@@ -324,7 +325,7 @@
 
 		// If element has only one text node and data-lang-token is defined
 		// set langContentKey property to use as a token
-		if(nodes.length == 1){
+		if(nodes.length == 1 && nodeObjArray[0]){
 			nodeObjArray[0].langToken = elem.data('langToken');
 		}
 		
@@ -355,13 +356,13 @@
 
                 if (defaultText) {
                     // Translate the langDefaultText
-                    translation = this.translate(defaultText, lang);
+                    translation = this.translate(defaultText, null, lang);
 					
 					// if the text containing HTML tag, processing it
 					regex = /<[^>]+>/g;
 					
 					if(regex.test(translation)) {
-						elem.context.innerHTML = translation;
+						elem.html(translation);
 					}else if (translation) {
                         try {
                             // Replace the text with the translated version
@@ -370,7 +371,7 @@
 
                         }
                     } else {
-                        if (console && console.log) {
+                        if (console && console.log && this.logMissingTranslations) {
                             console.log('Translation for "' + defaultText + '" not found!');
                         }
                     }
@@ -403,7 +404,7 @@
                 if (elem.attr(attr)) {
                     if (lang !== this.defaultLang) {
                         // Get the translated value
-                        translation = this.translate(attrObj[attr], lang);
+                        translation = this.translate(attrObj[attr], null, lang);
 
                         // Check we actually HAVE a translation
                         if (translation) {
@@ -439,7 +440,7 @@
                 case 'reset':
                     if (langNotDefault) {
                         // Get the translated value
-                        translation = this.translate(elem.data('lang-val'), lang);
+                        translation = this.translate(elem.data('lang-val'), null, lang);
 
                         // Check we actually HAVE a translation
                         if (translation) {
@@ -455,7 +456,7 @@
         } else if (elem.is('img')) {
             if (langNotDefault) {
                 // Get the translated value
-                translation = this.translate(elem.data('lang-src'), lang);
+                translation = this.translate(elem.data('lang-src'), null, lang);
 
                 // Check we actually HAVE a translation
                 if (translation) {
@@ -586,34 +587,42 @@
      * @param {String} lang The two-letter language code to translate to.
      * @returns {*}
      */
-    Lang.prototype.translate = function (text, lang) {
+    Lang.prototype.translate = function (text, replacements, lang) {
+        var result = "";
         lang = lang || this.currentLang;
 
-        if (this.pack[lang]) {
-            var translation = '';
-
-            if (lang != this.defaultLang) {
-                // Check for a direct token translation
-                translation = this.pack[lang].token[text];
-
-                if (!translation) {
-                    // No token translation was found, test for regex match
-                    translation = this._regexMatch(text, lang);
-                }
-
-                if (!translation) {
-                    if (console && console.log) {
-                        console.log('Translation for "' + text + '" not found in language pack: ' + lang);
-                    }
-                }
-
-                return translation || text;
-            } else {
-                return text;
-            }
-        } else {
-            return text;
+		if (this.pack[lang]) {
+			var translation = '';
+			if (lang != this.defaultLang) {
+				// Check for a direct token translation
+				
+				if (this.pack[lang].token) {
+					translation = this.pack[lang].token[text];
+				}
+				
+				if (!translation) {
+					// No token translation was found, test for regex match
+					translation = this._regexMatch(text, lang);
+				}
+				
+				if (!translation) {
+					//console.log('Translation for "' + text + '" not found in language pack: ' + lang);
+				}
+				result = translation || text;
+			} else {
+				result = text;
+			}
+		} else {
+			result = text;
         }
+
+		if (replacements && (typeof replacements === 'object')) {
+			replacements.forEach(function(item,index)
+			{
+				result = result.replace('%s',item); 
+			});
+		}
+		return result;
     };
 
     /**
