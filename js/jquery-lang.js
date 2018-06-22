@@ -362,7 +362,7 @@
 					regex = /<[^>]+>/g;
 					
 					if(regex.test(translation)) {
-						elem.context.innerHTML = translation;
+						elem.html(translation);
 					}else if (translation) {
                         try {
                             // Replace the text with the translated version
