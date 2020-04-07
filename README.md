@@ -12,7 +12,10 @@ translations from a default language such as English to other languages.
 * Supports changing image urls when language changes
 * Event hooks for custom processing
 * No intervals or timeouts, just high-performance code
- 
+
+## Why?
+For less modern approaches to sites and apps, some people still utilise jQuery. While the modern approach (and one we advocate) would be to use something like React, React Native or Next.js to create sites and apps, many people still rely on jQuery. When this plugin was created there was nothing like it for jQuery and the plugin has grown steadily in popularity ever since. For that reason we try to maintain this repo and help users who want to use it, but would suggest that anyone who is trying to solve this problem in the year 2020 and beyond, should have adopted a more modern approach by now!
+
 ## Who Made This?
 This plugin and all related code was created by Irrelon Software Limited, a U.K. registered company with a mission to create awesome web applications and push the boundaries of app development. Check us out at https://www.irrelon.com
 
