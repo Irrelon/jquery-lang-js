@@ -19,66 +19,21 @@ This plugin and all related code was created by Irrelon Software Limited, a U.K.
 #### LinkedIn
 http://uk.linkedin.com/pub/rob-evans/25/b94/8a5/
 
-# Changelog
-2017-08-10 - Version 3.0.3 - Fixed bug that stopped library from working,
-introduced by merging some code from a pull request.
-
-2015-12-02 - Version 3.0.0 - **BREAKING CHANGES**
-* Changed the way the library is instantiated and initialised. Uses
-options object now instead of arguments. Allows further extension without
-breaking init. If you are using version 2, please note that upgrading to
-version 3 will break your code. A minor update is required to get your
-existing code working again. See the readme.md section "Upgrading from
-Version 2 to Version 3" for details.
-
-2015-11-18 - Version 2.8.1
-* Added package.json as per #52
-
-2015-01-09 - Version 2.8
-* Added support for changing images when the language changes
-
-2015-01-07 - Version 2.7
-* Removed console.log() calls so that old versions of Internet Explorer won't break
-
-2014-06-06 - Version 2.6
-* Changed _getTextNodes & _setTextNodes methods to work under IE8. _getTextNodes returns now array of objects where every object have two properties:
-	- node - current text node
-	- langDefaultText - remember data of current text node 
-
-2014-04-19 - Version 2.5
-* Changed dynamically loaded language packs to JSON format. This allows the packs to be loaded by other programming languages such as PHP that can natively interpret JSON but not JavaScript.
-
-2014-02-22 - Version 2.4
-* Added dynamic loading of language packs so they don't need to be loaded up front, saving on HTTP requests and memory usage
-
-2014-02-02 - Version 2.3
-* Fixed bug when switching from non-default language to other non-default language
-
-2014-02-01 - Version 2.2
-* Check that a language pack actually exists before trying to switch to it
-* Allow disabling event firing so dynamic elements wont fire update events
-* Allow cookies to override passed current language on constructor if passing true as third arg to new Lang()
-* Fix to allow auto-translate when using jQuery appendTo() method
-* Fix for dynamic translation of root-element text nodes
-
-2014-02-01 - Version 2.1
-* Fixed break in jQuery chaining
-* Added cookies for persistence when $.cookie exists
-* Supports automatic translation for dynamically added content (when added via jQuery)
-* Added support for regular expression matches
-* Added support for translating text nodes mixed with html nodes
-
-2014-01-31 - Version 2.0
-* Complete plugin re-write
-
 # How to use
 
-*If you want language selection to persist across pages automatically, please ensure you include the
-js-cookie plugin available from: https://github.com/js-cookie/js-cookie on your page as well.*
+Include the jquery-lang-js library on your page/site/app by putting this in the `<head>` tag:
+
+```html
+<script src="js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
+```
+
+> If you want language selection to persist across pages automatically, please ensure you include the js-cookie plugin available from: https://github.com/js-cookie/js-cookie on your page as well.
 
 Include the plugin script in your head tag.
 
-    <script src="js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
+```html
+<script src="js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
+```
 
 Add the following to your HTML page in either the head or body:
 
@@ -340,6 +295,58 @@ that any changes you make are:
 3. Documented with the JSDoc standard as the other methods are
 
 Thank you to everyone who takes their time to write updates to the plugin!
+
+# Changelog
+2017-08-10 - Version 3.0.3 - Fixed bug that stopped library from working,
+introduced by merging some code from a pull request.
+
+2015-12-02 - Version 3.0.0 - **BREAKING CHANGES**
+* Changed the way the library is instantiated and initialised. Uses
+options object now instead of arguments. Allows further extension without
+breaking init. If you are using version 2, please note that upgrading to
+version 3 will break your code. A minor update is required to get your
+existing code working again. See the readme.md section "Upgrading from
+Version 2 to Version 3" for details.
+
+2015-11-18 - Version 2.8.1
+* Added package.json as per #52
+
+2015-01-09 - Version 2.8
+* Added support for changing images when the language changes
+
+2015-01-07 - Version 2.7
+* Removed console.log() calls so that old versions of Internet Explorer won't break
+
+2014-06-06 - Version 2.6
+* Changed _getTextNodes & _setTextNodes methods to work under IE8. _getTextNodes returns now array of objects where every object have two properties:
+	- node - current text node
+	- langDefaultText - remember data of current text node 
+
+2014-04-19 - Version 2.5
+* Changed dynamically loaded language packs to JSON format. This allows the packs to be loaded by other programming languages such as PHP that can natively interpret JSON but not JavaScript.
+
+2014-02-22 - Version 2.4
+* Added dynamic loading of language packs so they don't need to be loaded up front, saving on HTTP requests and memory usage
+
+2014-02-02 - Version 2.3
+* Fixed bug when switching from non-default language to other non-default language
+
+2014-02-01 - Version 2.2
+* Check that a language pack actually exists before trying to switch to it
+* Allow disabling event firing so dynamic elements wont fire update events
+* Allow cookies to override passed current language on constructor if passing true as third arg to new Lang()
+* Fix to allow auto-translate when using jQuery appendTo() method
+* Fix for dynamic translation of root-element text nodes
+
+2014-02-01 - Version 2.1
+* Fixed break in jQuery chaining
+* Added cookies for persistence when $.cookie exists
+* Supports automatic translation for dynamically added content (when added via jQuery)
+* Added support for regular expression matches
+* Added support for translating text nodes mixed with html nodes
+
+2014-01-31 - Version 2.0
+* Complete plugin re-write
 
 # Roadmap
 
