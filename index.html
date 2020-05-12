@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>jQuery Lang JS Module Test Page</title>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
 	<script src="js/js.cookie.js" charset="utf-8" type="text/javascript"></script>
@@ -9,7 +9,10 @@
 	<!--<script src="js/langpack/nonDynamic.js" charset="utf-8" type="text/javascript"></script>-->
 	<script type="text/javascript">
 		var lang = new Lang();
+
+		lang.dynamic('en', 'js/langpack/en.json');
 		lang.dynamic('th', 'js/langpack/th.json');
+
 		lang.init({
 			defaultLang: 'en'
 		});
@@ -35,13 +38,14 @@
 <body>
 <a href="http://flattr.com/thing/352558/jQuery-Multi-Language-Site-Plugin" target="_blank">
 	<img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this"
-		 border="0"/></a><BR/><BR/>
+			border="0" /></a><BR /><BR />
 
 <div id="langChanger"><a href="#" onclick="window.lang.change('en'); return false;">Switch to English</a> | <a href="#"
-																											   onclick="window.lang.change('th'); return false;">Switch
+		onclick="window.lang.change('th'); return false;">Switch
 	to Thai</a></div>
 <div id="testHtml">
-	<div id="searchTitle" class="sectionTitle" lang="en">Property Search</div>
+	<div id="searchTitle" class="sectionTitle" lang="en" data-lang-token="propertySearch"></div>
+	<div lang="en" data-lang-token="translationWithDataObject" data-lang-default-data='{"firstName": "Amelia", "lastName": "Earhart"}'></div>
 	<div id="searchForm">
 		<form action="/api/search" method="post" enctype="multipart/form-data">
 			<table>
@@ -49,25 +53,25 @@
 					<td><span lang="en">Location</span>:</td>
 				</tr>
 				<tr>
-					<td><input type="text" name="location"/></td>
+					<td><input type="text" name="location" /></td>
 				</tr>
 				<tr>
 					<td>
-						<hr/>
+						<hr />
 					</td>
 				</tr>
 				<tr>
 					<td><span lang="en">Budget</span> (with placeholder text):</td>
 				</tr>
 				<tr>
-					<td><input lang="en" type="text" name="budgetFrom" placeholder="Budget"/></td>
+					<td><input lang="en" type="text" name="budgetFrom" placeholder="Budget" /></td>
 				</tr>
 				<tr>
-					<td><input lang="en" type="text" name="budgetTo" placeholder="Budget"/></td>
+					<td><input lang="en" type="text" name="budgetTo" placeholder="Budget" /></td>
 				</tr>
 				<tr>
 					<td>
-						<hr/>
+						<hr />
 					</td>
 				</tr>
 				<tr>
@@ -88,7 +92,7 @@
 				</tr>
 				<tr>
 					<td>
-						<hr/>
+						<hr />
 					</td>
 				</tr>
 				<tr>
@@ -111,7 +115,7 @@
 				</tr>
 				<tr>
 					<td>
-						<hr/>
+						<hr />
 					</td>
 				</tr>
 				<tr>
@@ -143,27 +147,27 @@
 				<tr>
 					<td>
 						&lt;input type=&quot;button&quot;&gt;:
-						<input type="button" value="Search..." lang="en"/>
+						<input type="button" value="Search..." lang="en" />
 					</td>
 				</tr>
 				<tr>
 					<td>
 						&lt;button&gt;:
-						<button type="button" lang="en"/>
+						<button type="button" lang="en" />
 						Search...</button>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						&lt;reset&gt;:
-						<button type="reset" lang="en"/>
+						<button type="reset" lang="en" />
 						Search...</button>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						&lt;img&gt;:
-						<img lang="en" data-lang-token="FLAG" src="http://www.ioling.org/images/flags/uk.gif"/>
+						<img lang="en" data-lang-token="flagImage" src="https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg" height="150" />
 					</td>
 				</tr>
 				<tr>
@@ -175,7 +179,7 @@
 				<tr>
 					<td>
 						Click to test alert text:
-						<input type="button" value="Alert!" onclick="alert(window.lang.translate('Property Search'));"/>
+						<input type="button" value="Alert!" onclick="alert(window.lang.translate('propertySearch'));" />
 					</td>
 				</tr>
 
@@ -183,16 +187,15 @@
 					<td>
 						Click to test loading dynamic content:
 						<input type="button" value="Load Dynamic..."
-							   onclick="$('#dyn-target').append('Something Budget <span lang=\'en\'>Something Budget</span>');"/>
+								onclick="$('#dyn-target').append('Something Budget <span lang=\'en\'>Something Budget</span>');" />
 
 						<div id="dyn-target" lang="en"></div>
 					</td>
 				</tr>
-				
+
 				<tr>
 					<td>
-						Long text translation with a custom defined token(data-lang-token attribute):<br>
-						
+						Long text translation with a custom defined token (data-lang-token attribute):<br>
 						<div lang="en" data-lang-token="lorem">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in ...</div>
 					</td>
 				</tr>

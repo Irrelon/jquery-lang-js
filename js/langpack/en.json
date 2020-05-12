@@ -1,0 +1,10 @@
+{
+	"token": {
+		"propertySearch": "Property Search",
+		"flagImage": "https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg",
+		"lorem": "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in ...",
+		"translationWithDataObject": "My dynamic user data is First Name: ${data.firstName} and Last Name: ${data.lastName}",
+		"translationWithDataString": "My dynamic string is ${data}!",
+		"translationWithDataArray": "My dynamic string is ${data.0}, ${data.1}!"
+	}
+}

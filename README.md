@@ -12,6 +12,7 @@ translations from a default language such as English to other languages.
 * Supports changing image urls when language changes
 * Event hooks for custom processing
 * No intervals or timeouts, just high-performance code
+* Template strings to inject data into the translated output (new in version 4.0.0)
 
 ## Why?
 For less modern approaches to sites and apps, some people still utilise jQuery. While the modern approach (and one we advocate) would be to use something like React, React Native or Next.js to create sites and apps, many people still rely on jQuery. When this plugin was created there was nothing like it for jQuery and the plugin has grown steadily in popularity ever since. For that reason we try to maintain this repo and help users who want to use it, but would suggest that anyone who is trying to solve this problem in the year 2020 and beyond, should have adopted a more modern approach by now!
@@ -22,8 +23,10 @@ This plugin and all related code was created by Irrelon Software Limited, a U.K.
 #### LinkedIn
 http://uk.linkedin.com/pub/rob-evans/25/b94/8a5/
 
-# How to use
+#### GitHub
+https://github.com/Irrelon
 
+# How to use
 Include the jquery-lang-js library on your page/site/app by putting this in the `<head>` tag:
 
 ```html
@@ -51,7 +54,7 @@ Add the following to your HTML page in either the head or body:
 </script>
 ```
 
-The init() method takes an options object with the following structure:
+The `init()` method takes an options object with the following structure:
 
 ```js
 lang.init({
@@ -107,7 +110,7 @@ requested from the server.
 
 Instead of loading all the language packs your site provides up front, it can be useful to only load the packs when the
 user requests a language be changed. The plugin allows you to simply define the packs and their paths and then it will
-handle loading them on demand. To define a language pack to load dynamically call the lang.dynamic() method after the
+handle loading them on demand. To define a language pack to load dynamically call the `lang.dynamic()` method after the
 plugin has loaded and been instantiated:
 
 	// Define the thai language pack as a dynamic pack to be loaded on demand
@@ -155,7 +158,7 @@ The plugin will automatically translate button element text when defined like th
 
     <button lang="en">Some button text</button>
 
-# Placeholder text
+# Placeholder Text
 
 You can also translate placeholder text like this:
 
@@ -163,14 +166,89 @@ You can also translate placeholder text like this:
 
 When you change languages, the plugin will update the placeholder text where a translation exists.
 
-# Translating other text in JavaScript such as alert() calls
+# Translating Text in JavaScript Such as alert() Calls
 
 If you need to know the current translation value of some text in your JavaScript code such as when calling
-alert() you can use the translate() method:
+`alert()` you can use the `translate()` method:
 
     alert(window.lang.translate('Some text to translate'));
+    
+# Dynamic Data / Template Strings
+> *New in V4.0.0* 
 
-# Translating long text with a custom defined token
+As part of the version 4.0.0 update, you can now use template strings to output dynamic data in your
+translations.
+
+For instance, in your translation en.json file if you created a token "myTranslationToken":
+
+    {
+        "token": {
+            "myTranslationToken":"Hello ${data.firstName} ${data.lastName}"
+        }
+    }
+
+When you called the `translate()` function with an object that has a firstName and lastName field:
+
+    alert(window.lang.translate("myTranslationToken", "en", {"firstName: "Amelia", "lastName": "Earhart"}));
+
+The resulting translation reads:
+
+    Hello Amelia Earhart
+
+This system uses a custom string template system, not the ES6 one so it has no dependency on ES6
+template strings and still works in legacy browsers.
+
+You might have noticed that the translation text used "data.firstName" but when we passed in our
+data object it didn't have a "data" field. We wrap your passed data in an object with a data field
+like this:
+
+    finalData = {
+        data: yourData
+    };
+
+This is so that if you only pass a string or a number, you can still access that via ${data} e.g.:
+
+    {
+        "token": {
+            "myTranslationToken":"Your age is ${data}"
+        }
+    }
+    
+And then:
+
+    alert(window.lang.translate("myTranslationToken", "en", 24));
+
+Which results in:
+
+    Your age is 24
+
+You can also pass an array of data and access each element via dot-notation:
+
+    {
+        "token": {
+            "myTranslationToken":"Your elements are ${data.0}, ${data.1}"
+        }
+    }
+
+And then:
+
+    alert(window.lang.translate("myTranslationToken", "en", ["Foo", "Bar"]));
+
+Which results in:
+
+    Your elements are Foo, Bar
+
+Using dot-notation you can access any sub-elements of any object or array easily.
+
+Under the hood this is using our dot-notation manipulation library: 
+https://www.npmjs.com/package/@irrelon/path
+
+Finally, we've added a new data attribute if you want to place data directly on an
+element rather than calling `translate()` via code:
+
+    <div lang="en" data-lang-token="myTranslationToken" data-lang-default-data='{"firstName": "Amelia", "lastName": "Earhart"}'></div>
+
+# Translating Text With a Token
 
 If you do not want to create translation files with long tokens, you can specify custom tokens for elements which contain long text.
 
@@ -184,34 +262,31 @@ To translate the long text
 "lorem" : "ตรงกันข้ามกับความเชื่อที่นิยมกัน Lorem Ipsum ไม่ได้เป็นเพียงแค่ชุดตัวอักษรที่สุ่มขึ้นมามั่วๆ แต่หากมีที่มาจากวรรณกรรมละตินคลาสสิกชิ้นหนึ่งในยุค  ..."
 ```
 
-**Limitation:** Elements with data-lang-token attribute, have to contain only one text node, otherwise the plugin uses text content as a token.
-
-# Dynamic content
+# Dynamically Loading and Inserting HTML Content
 
 If you load content dynamically and add it to the DOM using jQuery the plugin will AUTOMATICALLY translate
 to the current language. Ensure you have added "lang" attributes to any HTML that you want translated BEFORE
 you add it to the DOM.
 
-# Switching languages
+# Switching Languages
 
-To switch languages simply call the .change() method, passing the two-letter language code to switch to. For
+To switch languages simply call the `.change()` method, passing the two-letter language code to switch to. For
 instance here is a switcher that will change between English and Thai as used in the example page:
 
     <a href="#lang-en" onclick="window.lang.change('en'); return false;">Switch to English</a> | <a href="#lang-en" onclick="window.lang.change('th'); return false;">Switch to Thai</a>
 
 The onclick event is the only part that matters, you can apply the onclick to any element you prefer.
 
-# Define a language pack
-
+# Define a Language Pack
 Language packs are defined in JSON files and are added to the plugin like so:
 
     {
     	// Define token (exact phrase) replacements here
     	"token": {
-			"Property Search":"ค้นหา",
-			"Location":"สถานที่ตั้ง",
-			"Budget":"งบประมาณ",
-			"An option phrase to translate":"งบประมาณงบประมาณสถานที่ตั้ง",
+			"propertySearch":"ค้นหา",
+			"location":"สถานที่ตั้ง",
+			"budget":"งบประมาณ",
+			"anotherTokenToUse":"งบประมาณงบประมาณสถานที่ตั้ง",
 		},
 		// Define regular expression replacements here
 		"regex": [
@@ -231,23 +306,24 @@ It's that simple!
 When you call lang.change('th'), the plugin will check if the language pack is already loaded and if not, will load
 the pack first before changing languages. Once the pack file has been loaded the plugin will change to that language.
 
-Loading languages dynamically is only done when the the change() method is called. This means if you request a
-translation of a string via the translate() method BEFORE the language pack for that language is loaded the translation
+Loading languages dynamically is only done when the the `change()` method is called. This means if you request a
+translation of a string via the `translate()` method BEFORE the language pack for that language is loaded the translation
 will fail.
 
 If you require a language pack to be loaded and don't want to change the page language you can request loading the pack
-manually by calling the loadPack() method like so:
+manually by calling the `loadPack()` method like so:
 
 	lang.loadPack('th');
 
 If you need to know when the pack has been loaded pass a callback method:
 
 	lang.loadPack('th', function (err) {
-		if (!err) {
-			// The language pack loaded
-		} else {
+		if (err) {
 			// There was an error loading the pack
+			return;
 		}
+		
+		// The language pack loaded
 	});
 
 # Translating Custom Element Attributes
@@ -269,15 +345,16 @@ forward without having to introduce breaking changes with each enhancement.
 
 Prior to version 3 you would instantiate the library via:
 
-	var lang = new Lang('defaultLanguageCode');
+	var lang = new Lang('en');
 
-Now there is a new init() method which should be called AFTER defining your
+Now there is a new `init()` method which should be called AFTER defining your
 dynamic loading languages:
 
 	// Instantiate the library
 	var lang = new Lang();
 	
 	// Declare a dynamic language pack
+	lang.dynamic('en', 'js/langpack/en.json');
 	lang.dynamic('th', 'js/langpack/th.json');
 	
 	// Initialise the library
@@ -300,6 +377,11 @@ that any changes you make are:
 Thank you to everyone who takes their time to write updates to the plugin!
 
 # Changelog
+2020-05-12 - Version 4.0.0
+* Added data template support to output translation strings with embedded data.
+* Cleaned up and rationalised some of the code with things like early-exits
+* More support for data-lang-token because tokens are really the proper way to be doing translations
+
 2017-08-10 - Version 3.0.3 - Fixed bug that stopped library from working,
 introduced by merging some code from a pull request.
 
