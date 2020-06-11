@@ -362,7 +362,7 @@
 			// If the text contains an HTML tag, process it
 			if (regexCheckForHtmlTag.test(translation)) {
 				// Set the element's innerHTML to the translated HTML markup
-				elem.context.innerHTML = translation;
+				elem[0].innerHTML = translation;
 			} else if (translation) {
 				try {
 					// Replace the text with the translated version
@@ -464,7 +464,7 @@
 				if (translation) {
 					// Set translated value
 					
-					elem.context.innerHTML = translation;
+					elem[0].innerHTML = translation;
 				}
 			} else if (originalContent) {
 				this._setTextNodes(elem, originalContent, lang, data);
