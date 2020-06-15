@@ -326,13 +326,21 @@ If you need to know when the pack has been loaded pass a callback method:
 		// The language pack loaded
 	});
 
-# Translating Custom Element Attributes
-The plugin maintains a list of attributes that will automatically translate and you can specify your own custom attributes too. The attributes that are translated by default are:
+# Translating Element Attributes
+The plugin maintains a list of attributes that will automatically translate. The attributes are:
 
 * title
 * alt
 * placeholder
 * href
+
+In case you want to translate an attribute, but NOT the content of the element, add the **data-lang-content** attribute to the element and set it to "false":
+
+	<div lang="en" data-lang-token="lorem" data-lang-content="false" title="Lorem ipsum dolor sit amet">
+		<i class="mdi mdi-icon-bell"></i>
+	</div>
+
+# Custom Element Attributes
 
 You can specify custom attributes that will be translated by adding them to the attrList property of the lang-js instance. For example to auto-translate an attribute called 'data-name' you would add this after lang-js has been included on your page:
 
