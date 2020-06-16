@@ -117,7 +117,7 @@
 			
 			if (cookieLang) {
 				// We have a cookie language, set the current language
-				currentLang = cookieLang;
+                currentLang = cookieLang;
 			}
 		}
 		
@@ -362,8 +362,11 @@
 			// If the text contains an HTML tag, process it
 			if (regexCheckForHtmlTag.test(translation)) {
 				// Set the element's innerHTML to the translated HTML markup
-				elem[0].innerHTML = translation;
-			} else if (translation) {
+
+                //KRISTOF: dont work in jQuery 3.0 ... elem.context.innerHTML = translation;
+                elem[0].innerHTML = translation;
+
+            } else if (translation) {
 				try {
 					// Replace the text with the translated version
 					textNode.node.data = textNode.node.data.split($.trim(textNode.node.data)).join(translation);
@@ -464,7 +467,8 @@
 				if (translation) {
 					// Set translated value
 					
-					elem[0].innerHTML = translation;
+					//KRISTOF: dont work in jQuery 3.0 ... elem.context.innerHTML = translation;
+                    elem.text(translation);
 				}
 			} else if (originalContent) {
 				this._setTextNodes(elem, originalContent, lang, data);
@@ -564,6 +568,9 @@
 		if (fireAfterUpdate) {
 			this.afterUpdate(currLang, lang);
 		}
+
+		//KRISTOF: Set lang to HTML root element
+        $("html").attr("lang", lang);
 		
 		// Check for cookie support
 		if (typeof Cookies !== "undefined") {
@@ -778,14 +785,16 @@
 		if (rootElem.attr("lang")) {
 			// Switch off events for the moment
 			this._fireEvents = false;
-			
+
+            //KRISTOF: Breaks the cookie/reload feature; defaultLang is resetted to currentLang by calling this.change
+			//--
 			// Check if the root element is currently set to another language from current
-			this._translateElement(rootElem, this.defaultLang, this.getLangDataFromElement(rootElem));
-			this.change(this.defaultLang, rootElem);
-			
-			// Calling change above sets the global currentLang but this is supposed to be
-			// an isolated change so reset the global value back to what it was before
-			this.currentLang = currLang;
+            //this._translateElement(rootElem, this.defaultLang, this.getLangDataFromElement(rootElem));
+			//this.change(this.defaultLang, rootElem);
+			//--
+            //// Calling change above sets the global currentLang but this is supposed to be
+			//// an isolated change so reset the global value back to what it was before
+			//this.currentLang = currLang;
 			
 			// Record data on the default language from the root element
 			this._processElement(rootElem);
@@ -808,3 +817,4 @@
 	
 	return Lang;
 }));
+
