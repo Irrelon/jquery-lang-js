@@ -35,12 +35,6 @@ Include the jquery-lang-js library on your page/site/app by putting this in the 
 
 > If you want language selection to persist across pages automatically, please ensure you include the js-cookie plugin available from: https://github.com/js-cookie/js-cookie on your page as well.
 
-Include the plugin script in your head tag.
-
-```html
-<script src="js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
-```
-
 Add the following to your HTML page in either the head or body:
 
 ```html
