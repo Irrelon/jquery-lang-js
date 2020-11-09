@@ -21,7 +21,7 @@ If you want dynamic language selection without utlising server-side rendering or
 This plugin and all related code was created by Irrelon Software Limited, a U.K. registered company with a mission to create awesome web applications and push the boundaries of app development. Check us out at https://www.irrelon.com
 
 #### LinkedIn
-http://uk.linkedin.com/pub/rob-evans/25/b94/8a5/
+https://uk.linkedin.com/pub/rob-evans/25/b94/8a5/
 
 #### GitHub
 https://github.com/Irrelon
@@ -452,4 +452,4 @@ If you like this project, please consider Flattr-ing it! http://bit.ly/qCEbTC
 This project is updated and maintained by:
 
 Irrelon Software Limited
-http://www.irrelon.com
+https://www.irrelon.com
