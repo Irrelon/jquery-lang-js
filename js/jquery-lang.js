@@ -32,7 +32,7 @@
 	if (typeof define === "function" && define.amd) {
 		define(["jquery", "Cookies"], factory);
 	} else if (typeof exports === "object") {
-		module.exports = factory();
+		module.exports = factory(window && window.$, window && window.Cookies);
 	} else {
 		var _OldLang = window.Lang;
 		var api = window.Lang = factory(jQuery, typeof Cookies !== "undefined" ? Cookies : undefined);
