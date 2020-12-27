@@ -217,3 +217,9 @@ pip-log.txt
 .idea
 templates_c
 cache
+
+#############
+## Node.JS specifics
+#############
+
+node_modules
