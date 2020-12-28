@@ -2,7 +2,7 @@
 // Project: https://github.com/Irrelon/jquery-lang-js
 // Definitions by: Claudio Schilling <https://github.com/rbfowler9lfc>
 
-type JQueryAnySelectorInput = JQuery.htmlString | JQuery.Selector | Element[] | JQuery<unknown> | Element | JQuery.PlainObject<unknown>;
+/// <reference types="jquery" />
 
 declare class Lang
 {
@@ -13,14 +13,22 @@ declare class Lang
 	 * @param {Object} options The options to init the library with.
 	 * See the readme.md for the details of the options available.
 	 */
-	public init(options : Lang.InitOptions) : void;
+	init(options : Lang.InitOptions) : void;
+
+	/**
+	 * Defines a language pack that can be dynamically loaded and the
+	 * path to use when doing so.
+	 * @param {String} lang The language two-letter iso-code.
+	 * @param {String} path The path to the language pack js file.
+	 */
+	dynamic(lang : string, path : string) : void;
 
 	/**
 	 * Loads a new language pack for the given language.
 	 * @param {string} lang The language to load the pack for.
 	 * @param {Function=} callback Optional callback when the file has loaded.
 	 */
-	public loadPack(lang : string, callback ?: (error : boolean) => void) : void;
+	loadPack(lang : string, callback ?: (error : boolean) => void) : void;
 
 	/**
 	 * Call this to change the current language on the page.
@@ -36,30 +44,52 @@ declare class Lang
 	 * you passed in the change call (the lang argument) and the third will
 	 * be the selector used in the change update.
 	 */
-	public change<T extends JQueryAnySelectorInput>(lang : string, selector ?: T, callback ?: (error : boolean, newLang : string, selector : T) => void) : void;
-
-	/**
-	 * Defines a language pack that can be dynamically loaded and the
-	 * path to use when doing so.
-	 * @param {String} lang The language two-letter iso-code.
-	 * @param {String} path The path to the language pack js file.
-	 */
-	public dynamic(lang : string, path : string) : void;
+	change<T extends Lang.SelectorInput>(lang : string, selector ?: T, callback ?: (error : boolean, newLang : string, selector : T) => void) : void;
 
 	/**
 	 * Translates text from the default language into the passed language.
 	 * @param {String} text The text to translate.
 	 * @param {String} lang The two-letter language code to translate to.
-	 * @returns {*}
 	 */
-	public translate(text : string, lang : string, data : string | number | unknown[] | Record<string, unknown>) : string;
+	translate(text : string, lang ?: string, data ?: string | number | unknown[] | Record<string, unknown>) : string;
+
+	getLangDataFromElement(elem : JQuery<HTMLElement>) : string;
+	getDataAtPath(obj : Record<string, unknown>, path : string | string[], defaultval ?: string) : string | number;
+	beforeUpdate(currentlang : string, newLang : string) : void;
+	afterUpdate(currentlang : string, newLang : string) : void;
+	refresh() : void;
+
+	/**
+	 * Object that holds the language packs.
+	 */
+	private pack : Record<string, unknown>;
+
+	/**
+	 * Array of translatable attributes to check for on elements.
+	 */
+	private attrList : string[];
+
+	private _start(selector);
+	private _processElement(elem);
+	private _storeAttribs(elem);
+	private _storeContent(elem);
+	private _getTextNodes(elem);
+	private _setTextNodes(elem, nodes, lang, data);
+	private _translateAttribs(elem, lang, data);
+	private _translateContent(elem, lang, data);
+	private _translateElement(elem, lang, data);
+	private _parseTemplate(str, data);
+	private _regexMatch(text, lang);
+	private _mutation(context, method, args);
 }
 
 export = Lang;
 
 declare namespace Lang
 {
-	export interface CookiesOptions
+	type SelectorInput = JQuery.htmlString | JQuery.Selector | Element[] | JQuery<unknown> | Element | JQuery.PlainObject<unknown>;
+
+	interface CookiesOptions
 	{
 		/** Overrides the default cookie name to something else. The default is `"langCookie"`. */
 		name ?: string;
@@ -69,7 +99,7 @@ declare namespace Lang
 		path ?: string;
 	}
 
-	export interface InitOptions
+	interface InitOptions
 	{
 		/** The default language of the page / app. */
 		defaultLang : string;

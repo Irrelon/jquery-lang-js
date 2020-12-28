@@ -12,7 +12,9 @@
     "automatic",
     "translation"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "@types/jquery": "*"
+  },
   "engines": {
     "node": "*"
   },
@@ -25,8 +27,5 @@
   "bugs": {
     "url": "http://github.com/irrelon/jquery-lang-js/issues"
   },
-  "license": "MIT",
-  "devDependencies": {
-    "@types/jquery": "*"
-  }
+  "license": "MIT"
 }
