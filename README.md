@@ -67,6 +67,13 @@ lang.init({
 	currentLang: 'en',
 	
 	/**
+	 * If true, it will not print console log for not found contents
+	 * @type boolean
+	 * @optional 
+	 */
+	disableLog: false,
+
+	/**
 	 * This object is only required if you want to override the default
 	 * settings for cookies.
 	 */
