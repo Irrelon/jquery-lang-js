@@ -67,6 +67,7 @@
 		
 		defaultLang = options.defaultLang;
 		currentLang = options.currentLang;
+		disableLog = options.disableLog || false;
 		allowCookieOverride = options.allowCookieOverride;
 		
 		// Set cookie settings
@@ -372,7 +373,7 @@
 					// set a text node's data.
 				}
 			} else {
-				if (console && console.log) {
+				if (!disableLog && console && console.log) {
 					console.log("Translation for \"" + defaultContent + "\" not found!");
 				}
 			}
@@ -701,7 +702,7 @@
 		}
 		
 		if (!translation && !langIsDefault) {
-			if (console && console.log) {
+			if (!disableLog && console && console.log) {
 				console.log("Translation for \"" + text + "\" not found in language pack: " + lang);
 			}
 		}
