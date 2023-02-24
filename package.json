@@ -12,7 +12,9 @@
     "automatic",
     "translation"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "@types/jquery": "*"
+  },
   "engines": {
     "node": "*"
   },
@@ -21,6 +23,7 @@
     "url": "git://github.com/irrelon/jquery-lang-js.git"
   },
   "main": "js/jquery-lang.js",
+  "types": "js/jquery-lang.d.ts",
   "bugs": {
     "url": "http://github.com/irrelon/jquery-lang-js/issues"
   },
